@@ -1,0 +1,37 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700&display=swap");
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: false;
+}
+
+@theme {
+  /* Fonts */
+  --font-sans: "Plus Jakarta Sans", serif;
+
+  /* Colors */
+  --background-image-gradient: linear-gradient(
+    0deg,
+    rgba(255, 194, 204) 0%,
+    rgba(255, 242, 244) 100%
+  );
+  --color-accent: #fd3a84;
+
+  /* Shadows */
+  --shadow-color: 351deg 37% 57%;
+  --shadow-elevation-high:
+    0px 0.5px 0.7px hsl(var(--shadow-color) / 0.34),
+    0px 2.9px 3.7px -0.4 hsl(var(--shadow-color) / 0.34),
+    0px 5.4px 6.8px -0.7 hsl(var(--shadow-color) / 0.34),
+    0px 8.9px 11.2px -1.1 hsl(var(--shadow-color) / 0.34),
+    0px 14.3px 18px -1.4 hsl(var(--shadow-color) / 0.34),
+    0px 22.3px 28.1px -1.8 hsl(var(--shadow-color) / 0.34),
+    0px 33.9px 42.7px -2.1px hsl(var(--shadow-color) / 0.34),
+    0px 50px 62.9px -2.5px hsl(var(--shadow-color) / 0.34);
+
+  /* Breakpoints */
+  --breakpoint-xs: 480px;
+}
+
+@utility flex-center {
+  @apply flex items-center justify-center;
+}
