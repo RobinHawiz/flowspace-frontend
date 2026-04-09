@@ -9,6 +9,16 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    children: [
+      {
+        path: "/sign-up",
+        lazy: () => import("@publicRoutes/sign-up/Page"),
+        hydrateFallbackElement: <></>,
+      },
+      {
+        path: "/*",
+      },
+    ],
   },
 ]);
 
