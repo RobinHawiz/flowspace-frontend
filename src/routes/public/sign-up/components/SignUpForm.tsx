@@ -1,5 +1,6 @@
 import { useState, type SubmitEvent } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 import { appUserRegisterMutationOptions } from "@hooks/queryOptions";
 import {
@@ -43,6 +44,7 @@ function SignUpForm() {
       };
       await appUserRegisterMutation(appUser);
       navigate("/log-in");
+      toast.success("Your account has been created. You can now log in.");
     } catch (err) {
       if (err instanceof AppError) {
         switch (err.statusCode) {
