@@ -9,6 +9,7 @@ import {
 } from "@customTypes/appUser";
 import { AppError } from "@customTypes/appError";
 import logo from "@images/logo.svg";
+import useRedirectIfAuthenticated from "@hooks/useRedirectIfAuthenticated";
 
 function SignUpForm() {
   const [errorMessage, setErrorMessage] = useState("");
@@ -17,6 +18,8 @@ function SignUpForm() {
   const { mutateAsync: appUserRegisterMutation } = useMutation(
     appUserRegisterMutationOptions(),
   );
+
+  useRedirectIfAuthenticated();
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
