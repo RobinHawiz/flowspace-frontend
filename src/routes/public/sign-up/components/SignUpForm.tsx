@@ -63,9 +63,7 @@ function SignUpForm() {
             setErrorMessage("An unexpected error occurred. Please try again.");
         }
         console.error(err.message);
-      }
-
-      if (err instanceof Error) {
+      } else if (err instanceof Error) {
         if (err.name === "TypeError") {
           setErrorMessage(
             "Connection failed. Please check your internet connection and try again.",
