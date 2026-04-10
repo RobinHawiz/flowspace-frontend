@@ -142,14 +142,14 @@ function SignUpForm() {
           />
         </div>
       </div>
-      <div className="w-full">
-        {errorMessage && (
+      {errorMessage && (
+        <div className="w-full">
           <p className="rounded-lg bg-red-500 px-3 py-2 text-sm text-white">
             * {errorMessage}
           </p>
-        )}
-      </div>
-      <div className="-mt-3 w-full">
+        </div>
+      )}
+      <div className="w-full">
         <input
           id="terms"
           type="checkbox"
