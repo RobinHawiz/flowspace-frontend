@@ -1,14 +1,21 @@
 import { useState, type SubmitEvent } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { appUserRegisterMutationOptions } from "@hooks/queryOptions";
 import {
   appUserRegistrationSchema,
   type AppUserRegistration,
 } from "@customTypes/appUser";
+import { AppError } from "@customTypes/appError";
 import logo from "@images/logo.svg";
 
 function SignUpForm() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { mutateAsync: appUserRegisterMutation } = useMutation(
+    appUserRegisterMutationOptions(),
+  );
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,10 +41,39 @@ function SignUpForm() {
         email: result.data.email,
         password: result.data.password,
       };
-      // TODO: Send appUser to backend and handle response
+      await appUserRegisterMutation(appUser);
+      navigate("/log-in");
     } catch (err) {
-      console.error(err);
-      // TODO: Handle errors sent by the backend and set appropriate error message
+      if (err instanceof AppError) {
+        switch (err.statusCode) {
+          case 409:
+            setErrorMessage("An account with this email already exists.");
+            break;
+          case 400:
+            setErrorMessage(
+              "Something went wrong while submitting the form. Please try again.",
+            );
+            break;
+          default:
+            setErrorMessage("An unexpected error occurred. Please try again.");
+        }
+        console.error(err.message);
+      }
+
+      if (err instanceof Error) {
+        if (err.name === "TypeError") {
+          setErrorMessage(
+            "Connection failed. Please check your internet connection and try again.",
+          );
+          console.error(err.message);
+        } else {
+          setErrorMessage("An unexpected error occurred. Please try again.");
+          console.error(err);
+        }
+      } else {
+        setErrorMessage("An unexpected error occurred. Please try again.");
+        console.error(err);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -161,7 +197,7 @@ function SignUpForm() {
         <p className="py-3 text-center text-sm font-medium text-slate-700">
           Already have an account?{" "}
           <NavLink
-            to="/login"
+            to="/log-in"
             className="text-accent focus-visible:ring-accent rounded-lg p-0.5 transition-all duration-200 ease-in-out hover:underline focus-visible:ring-2 focus-visible:outline-none"
           >
             Log in
