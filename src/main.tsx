@@ -5,6 +5,7 @@ import { ToastContainer, Bounce } from "react-toastify";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@src/queryClient";
 import { AuthProvider } from "@contexts/AuthProvider";
+import PrivateRoutes from "@components/PrivateRoutes";
 import App from "@src/App";
 
 const router = createBrowserRouter([
@@ -22,10 +23,20 @@ const router = createBrowserRouter([
         lazy: () => import("@publicRoutes/log-in/Page"),
         hydrateFallbackElement: <></>,
       },
+    ],
+  },
+  {
+    element: <PrivateRoutes />,
+    children: [
       {
-        path: "/*",
+        path: "/workspaces",
+        lazy: () => import("@protectedRoutes/workspaces/Page"),
+        hydrateFallbackElement: <></>,
       },
     ],
+  },
+  {
+    path: "/*",
   },
 ]);
 
