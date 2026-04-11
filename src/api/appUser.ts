@@ -4,7 +4,6 @@ import {
   type AppUserCredentials,
   type AppUserRegistration,
 } from "@customTypes/appUser";
-import { AuthTokenResponseSchema } from "@customTypes/auth";
 
 export async function registerUser(appUser: AppUserRegistration) {
   const options = {
@@ -24,20 +23,25 @@ export async function loginUser(creds: AppUserCredentials) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(creds),
+    credentials: "include" as const,
   };
-  const response = await request(`/auth/login`, options);
-  const Jwt = AuthTokenResponseSchema.parse(response);
-  return Jwt.token;
+  await request(`/auth/login`, options);
 }
 
 export async function getUser() {
   const options = {
     method: "GET" as const,
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("token"),
-    },
+    credentials: "include" as const,
   };
   const response = await request(`/auth/me`, options);
   const appUser = appUserResponseSchema.parse(response);
   return appUser;
+}
+
+export async function logoutUser() {
+  const options = {
+    method: "POST" as const,
+    credentials: "include" as const,
+  };
+  await request(`/auth/logout`, options);
 }

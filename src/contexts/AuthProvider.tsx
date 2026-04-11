@@ -9,12 +9,14 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { appUserQueryOptions } from "@hooks/queryOptions";
 import type { AppUserCredentials } from "@customTypes/appUser";
-import { loginUser } from "@api/appUser";
+import { loginUser, logoutUser } from "@api/appUser";
 
 type AuthContextType = {
-  token: string | null;
+  isLoggedIn: boolean;
+  isCheckingToken: boolean;
   login: (creds: AppUserCredentials) => Promise<void>;
   logout: () => void;
+  checkToken: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -31,59 +33,58 @@ export function useAuth() {
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const queryClient = useQueryClient();
-  const [token, setToken] = useState<string | null>(() =>
-    localStorage.getItem("token"),
-  );
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isCheckingToken, setIsCheckingToken] = useState(true);
+  const [initialAppLoad, setInitialAppLoad] = useState(true);
 
   const login = async (cred: AppUserCredentials) => {
-    const token = await loginUser(cred);
-    localStorage.setItem("token", token);
-    setToken(token);
+    await loginUser(cred);
     await queryClient.fetchQuery(appUserQueryOptions());
+    setIsLoggedIn(true);
   };
 
-  const logout = useCallback(() => {
-    localStorage.removeItem("token");
-    setToken(null);
+  const logout = useCallback(async () => {
+    await logoutUser();
     queryClient.invalidateQueries({ queryKey: ["currentAppUser"] });
+    setIsLoggedIn(false);
   }, [queryClient]);
 
   const checkToken = useCallback(async () => {
-    if (!token) {
-      return;
-    }
+    setIsCheckingToken(true);
     try {
+      // This request both verifies the session and refreshes the cached current user.
       await queryClient.fetchQuery(appUserQueryOptions());
+      setIsLoggedIn(true);
     } catch {
-      logout();
+      await logout();
+    } finally {
+      setIsCheckingToken(false);
     }
-  }, [token, queryClient, logout]);
+  }, [queryClient, logout]);
 
   useEffect(() => {
-    if (token) {
-      /* eslint-disable-next-line react-hooks/set-state-in-effect */
+    if (initialAppLoad) {
       checkToken();
+      setInitialAppLoad(false);
     }
-  }, [token, checkToken]);
+  }, [checkToken, initialAppLoad]);
 
   /*
    * Revalidate the token on an interval and log out if it expires.
    */
   useEffect(() => {
-    if (!token) {
-      return;
-    }
-
     const id = setInterval(() => {
       queryClient.invalidateQueries({ queryKey: ["currentAppUser"] });
       checkToken();
     }, 3_600_000);
 
     return () => clearInterval(id);
-  }, [token, queryClient, checkToken]);
+  }, [queryClient, checkToken]);
 
   return (
-    <AuthContext.Provider value={{ token, login, logout }}>
+    <AuthContext.Provider
+      value={{ isLoggedIn, isCheckingToken, login, logout, checkToken }}
+    >
       {children}
     </AuthContext.Provider>
   );

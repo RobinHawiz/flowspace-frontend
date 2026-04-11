@@ -2,8 +2,17 @@ import { useAuth } from "@contexts/AuthProvider";
 import { Navigate, Outlet } from "react-router-dom";
 
 function PrivateRoutes() {
-  const { token } = useAuth();
-  return token ? <Outlet /> : <Navigate to="/log-in" />;
+  const { isLoggedIn, isCheckingToken } = useAuth();
+  if (isCheckingToken) {
+    return null;
+  }
+  return isLoggedIn ? (
+    <main className="bg-gradient min-h-svh">
+      <Outlet />
+    </main>
+  ) : (
+    <Navigate to="/log-in" />
+  );
 }
 
 export default PrivateRoutes;

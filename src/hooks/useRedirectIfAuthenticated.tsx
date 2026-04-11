@@ -3,14 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@contexts/AuthProvider";
 
 function useRedirectIfAuthenticated() {
-  const { token } = useAuth();
+  const { isLoggedIn, isCheckingToken } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (token) {
+    if (isLoggedIn && !isCheckingToken) {
       navigate("/workspaces");
     }
-  }, [token, navigate]);
+  }, [isLoggedIn, isCheckingToken, navigate]);
 }
 
 export default useRedirectIfAuthenticated;

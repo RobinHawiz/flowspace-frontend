@@ -1,12 +1,17 @@
-import { Outlet } from "react-router-dom";
+import { useAuth } from "@contexts/AuthProvider";
+import { Navigate, Outlet } from "react-router-dom";
 
 function App() {
-  return (
-    <>
-      <main className="bg-gradient min-h-svh">
-        <Outlet />
-      </main>
-    </>
+  const { isLoggedIn, isCheckingToken } = useAuth();
+  if (isCheckingToken) {
+    return null;
+  }
+  return isLoggedIn ? (
+    <Navigate to="/workspaces" />
+  ) : (
+    <main className="bg-gradient min-h-svh">
+      <Outlet />
+    </main>
   );
 }
 
