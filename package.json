@@ -3,9 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "check-env": "tsx getenv.ts",
+    "predev": "npm run check-env",
     "dev": "vite",
-    "build": "tsx getenv.ts && tsc && vite build",
-    "preview": "vite preview"
+    "prebuild": "npm run check-env",
+    "build": "tsc && vite build",
+    "preview": "npm run check-env && vite preview"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.96.2",
