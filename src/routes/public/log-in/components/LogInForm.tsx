@@ -81,7 +81,7 @@ function LogInForm() {
     <form
       id="submit-form"
       onSubmit={(e) => handleSubmit(e)}
-      className="shadow-elevation-high xs:p-8 flex-center xs:min-h-0 min-h-svh w-full max-w-120.5 flex-col gap-6 rounded-lg bg-white px-4 py-8"
+      className="shadow-elevation-high xs:p-8 flex-center xs:min-h-0 min-h-svh w-full max-w-120.5 flex-col gap-6 rounded-lg bg-white px-4 py-8 text-black"
     >
       <img src={logo} alt="Flowspace logo" className="mx-auto" />
       <div className="flex w-full flex-col gap-3">

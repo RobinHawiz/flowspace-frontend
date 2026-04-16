@@ -1,7 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700&display=swap");
 @import "tailwindcss";
-@plugin "daisyui" {
-  themes: false;
+@plugin "daisyui";
+@plugin "daisyui/theme" {
+  name: "valentine";
+  default: true;
+  --color-accent: #fd3a84;
 }
 
 @theme {
@@ -14,7 +17,6 @@
     rgba(255, 194, 204) 0%,
     rgba(255, 242, 244) 100%
   );
-  --color-accent: #fd3a84;
 
   /* Shadows */
   --shadow-color: 351deg 37% 57%;
