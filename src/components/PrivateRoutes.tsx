@@ -1,3 +1,4 @@
+import DrawerMenu from "@components/DrawerMenu";
 import { useAuth } from "@contexts/AuthProvider";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -7,8 +8,10 @@ function PrivateRoutes() {
     return null;
   }
   return isLoggedIn ? (
-    <main className="bg-gradient min-h-svh">
-      <Outlet />
+    <main>
+      <DrawerMenu>
+        <Outlet />
+      </DrawerMenu>
     </main>
   ) : (
     <Navigate to="/log-in" />

@@ -15,7 +15,7 @@ type AuthContextType = {
   isLoggedIn: boolean;
   isCheckingToken: boolean;
   login: (creds: AppUserCredentials) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   checkToken: () => Promise<void>;
 };
 
