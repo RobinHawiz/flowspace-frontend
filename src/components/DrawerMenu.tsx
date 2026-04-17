@@ -2,13 +2,26 @@ import { useState, type PropsWithChildren } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { useAuth } from "@contexts/AuthProvider";
+import type { WorkspaceResponse } from "@customTypes/workspace";
 import openMenu from "@images/open-menu.svg";
 import closeMenu from "@images/close-menu.svg";
 import logOut from "@images/log-out.svg";
+import edit from "@images/edit.svg";
 import logo from "@images/logo.svg";
 import delay from "@utils/delay";
 
-function DrawerMenu({ children }: PropsWithChildren) {
+interface DrawerMenuProps extends PropsWithChildren {
+  workspace?: WorkspaceResponse;
+  isLoading?: boolean;
+  openEditWorkspaceModal?: () => void;
+}
+
+function DrawerMenu({
+  children,
+  workspace,
+  isLoading,
+  openEditWorkspaceModal,
+}: DrawerMenuProps) {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
@@ -35,6 +48,7 @@ function DrawerMenu({ children }: PropsWithChildren) {
         type="checkbox"
         checked={checked}
         onChange={toggleDrawer}
+        disabled={isLoading}
         className="drawer-toggle"
       />
       <div className="drawer-content relative">
@@ -48,9 +62,15 @@ function DrawerMenu({ children }: PropsWithChildren) {
               <img src={openMenu} />
             </label>
           </nav>
-          <div className="xs:absolute xs:top-1/2 xs:left-1/2 xs:-translate-x-1/2 xs:-translate-y-1/2 mx-auto">
-            <img src={logo} alt="Flowspace logo" />
-          </div>
+          {workspace !== undefined || isLoading ? (
+            <h1 className="text-2xl font-bold">
+              {workspace?.title || <div className="skeleton h-4 w-28"></div>}
+            </h1>
+          ) : (
+            <div className="xs:absolute xs:top-1/2 xs:left-1/2 xs:-translate-x-1/2 xs:-translate-y-1/2 mx-auto">
+              <img src={logo} alt="Flowspace logo" />
+            </div>
+          )}
         </header>
         {children}
       </div>
@@ -60,7 +80,7 @@ function DrawerMenu({ children }: PropsWithChildren) {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <ul className="menu bg-base-200 min-h-full w-80 p-4 font-bold">
+        <ul className="menu bg-base-200 flex min-h-full w-80 flex-col gap-2 p-4 font-bold">
           {/* Sidebar content here */}
           <li className="inline">
             <button
@@ -71,6 +91,17 @@ function DrawerMenu({ children }: PropsWithChildren) {
               <img src={closeMenu} />
             </button>
           </li>
+          {workspace && openEditWorkspaceModal && (
+            <li>
+              <button
+                className="btn focus:outline-accent gap-2.5 rounded-lg border-none bg-white p-2.5 hover:bg-slate-100"
+                onClick={openEditWorkspaceModal}
+              >
+                <img src={edit} />
+                <p className="mr-auto">Edit workspace</p>
+              </button>
+            </li>
+          )}
           <li className="mt-auto">
             <button
               className="btn focus:outline-accent gap-2.5 rounded-lg border-none bg-white p-2.5 hover:bg-slate-100"

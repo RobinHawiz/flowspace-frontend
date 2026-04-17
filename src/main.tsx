@@ -33,6 +33,11 @@ const router = createBrowserRouter([
         lazy: () => import("@protectedRoutes/workspaces/Page"),
         hydrateFallbackElement: <></>,
       },
+      {
+        path: "/workspaces/:workspaceId",
+        lazy: () => import("@protectedRoutes/workspace/Page"),
+        hydrateFallbackElement: <></>,
+      },
     ],
   },
   {

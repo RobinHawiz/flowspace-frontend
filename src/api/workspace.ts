@@ -2,6 +2,7 @@ import request from "@api/request";
 import {
   workspaceResponseSchema,
   type WorkspaceCreation,
+  type WorkspaceUpdate,
 } from "@customTypes/workspace";
 import delay from "@utils/delay";
 
@@ -19,6 +20,18 @@ export async function getWorkspaces() {
   return workspaces;
 }
 
+export async function getWorkspace(id: number) {
+  const options = {
+    method: "GET" as const,
+    credentials: "include" as const,
+  };
+  // Simulate network latency.
+  await delay(700);
+  const response = await request(`/workspaces/${id}`, options);
+  const workspace = workspaceResponseSchema.parse(response);
+  return workspace;
+}
+
 export async function createWorkspace(payload: WorkspaceCreation) {
   const options = {
     method: "POST" as const,
@@ -33,4 +46,19 @@ export async function createWorkspace(payload: WorkspaceCreation) {
   const response = await request(`/workspaces`, options);
   const workspace = workspaceResponseSchema.parse(response);
   return workspace;
+}
+
+export async function updateWorkspace(workspace: WorkspaceUpdate) {
+  // Simulate network delay
+  await delay(700);
+
+  const options = {
+    method: "PATCH" as const,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title: workspace.title }),
+    credentials: "include" as const,
+  };
+  await request(`/workspaces/${workspace.id}`, options);
 }

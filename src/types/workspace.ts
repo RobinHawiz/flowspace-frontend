@@ -18,3 +18,14 @@ export const workspaceCreationSchema = z.object({
     .min(1, "Title must be between 1 and 50 characters.")
     .max(50, "Title must be between 1 and 50 characters."),
 });
+
+// Payload for workspace update.
+export type WorkspaceUpdate = z.infer<typeof workspaceUpdateSchema>;
+
+export const workspaceUpdateSchema = z.object({
+  id: z.number(),
+  title: z
+    .string()
+    .min(1, "Title must be between 1 and 50 characters.")
+    .max(50, "Title must be between 1 and 50 characters."),
+});
