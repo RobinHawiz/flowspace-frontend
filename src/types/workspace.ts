@@ -8,3 +8,13 @@ export const workspaceResponseSchema = z.object({
   title: z.string(),
   role: z.enum(["admin", "member"]),
 });
+
+// Payload for workspace creation.
+export type WorkspaceCreation = z.infer<typeof workspaceCreationSchema>;
+
+export const workspaceCreationSchema = z.object({
+  title: z
+    .string()
+    .min(1, "Title must be between 1 and 50 characters.")
+    .max(50, "Title must be between 1 and 50 characters."),
+});

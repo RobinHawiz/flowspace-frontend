@@ -3,9 +3,19 @@ import { workspacesQueryOptions } from "@hooks/queryOptions";
 import WorkspaceCard from "@protectedRoutes/workspaces/components/WorkspaceCard";
 import createWorkspace from "@images/create-workspace.svg";
 import empty from "@images/empty.svg";
+import WorkspaceCreateModal from "@protectedRoutes/workspaces/components/WorkspaceCreateModal";
+
+const CREATE_WORKSPACE_MODAL_ID = "create_workspace_dialog";
 
 function WorkspacesList() {
   const { data: workspaces, isFetching } = useQuery(workspacesQueryOptions());
+
+  const openCreateWorkspaceModal = () => {
+    const modal = document.getElementById(
+      CREATE_WORKSPACE_MODAL_ID,
+    ) as HTMLDialogElement;
+    modal.showModal();
+  };
 
   return (
     <>
@@ -50,11 +60,15 @@ function WorkspacesList() {
               </p>
             </>
           )}
-          <button className="btn btn-primary gap-2.5 rounded-lg">
+          <button
+            onClick={openCreateWorkspaceModal}
+            className="btn btn-primary gap-2.5 rounded-lg"
+          >
             Create Workspace <img src={createWorkspace} />
           </button>
         </section>
       )}
+      <WorkspaceCreateModal />
     </>
   );
 }
