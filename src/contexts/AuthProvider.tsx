@@ -46,6 +46,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const logout = useCallback(async () => {
     await logoutUser();
     queryClient.invalidateQueries({ queryKey: ["currentAppUser"] });
+    queryClient.invalidateQueries({ queryKey: ["workspaces"] });
     setIsLoggedIn(false);
   }, [queryClient]);
 
@@ -74,12 +75,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
    */
   useEffect(() => {
     const id = setInterval(() => {
-      queryClient.invalidateQueries({ queryKey: ["currentAppUser"] });
       checkToken();
     }, 3_600_000);
 
     return () => clearInterval(id);
-  }, [queryClient, checkToken]);
+  }, [checkToken]);
 
   return (
     <AuthContext.Provider
