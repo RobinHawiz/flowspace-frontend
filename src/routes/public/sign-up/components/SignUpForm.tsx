@@ -8,8 +8,9 @@ import {
   type AppUserRegistration,
 } from "@customTypes/appUser";
 import { AppError } from "@customTypes/appError";
-import logo from "@images/logo.svg";
 import useRedirectIfAuthenticated from "@hooks/useRedirectIfAuthenticated";
+import getUnexpectedFormErrorMessage from "@utils/getUnexpectedFormErrorMessage";
+import logo from "@images/logo.svg";
 
 function SignUpForm() {
   const [errorMessage, setErrorMessage] = useState("");
@@ -63,19 +64,9 @@ function SignUpForm() {
             setErrorMessage("An unexpected error occurred. Please try again.");
         }
         console.error(err.message);
-      } else if (err instanceof Error) {
-        if (err.name === "TypeError") {
-          setErrorMessage(
-            "Connection failed. Please check your internet connection and try again.",
-          );
-          console.error(err.message);
-        } else {
-          setErrorMessage("An unexpected error occurred. Please try again.");
-          console.error(err);
-        }
       } else {
-        setErrorMessage("An unexpected error occurred. Please try again.");
-        console.error(err);
+        const errorMessage = getUnexpectedFormErrorMessage(err);
+        setErrorMessage(errorMessage);
       }
     } finally {
       setIsLoading(false);
