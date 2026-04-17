@@ -8,6 +8,10 @@
   --color-base-content: #000000;
 }
 
+.skeleton {
+  animation-duration: 1.1s;
+}
+
 @theme {
   /* Fonts */
   --font-sans: "Plus Jakarta Sans", serif;

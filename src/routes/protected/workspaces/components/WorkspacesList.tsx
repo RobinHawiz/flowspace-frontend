@@ -20,12 +20,7 @@ function WorkspacesList() {
   return (
     <>
       {isFetching ? (
-        <div className="flex-center shadow-elevation-high mb-[10svh] flex-col rounded-lg bg-white/40 px-6 py-8">
-          <span className="loading loading-spinner text-accent w-8 sm:w-12"></span>
-          <p className="text-accent mt-2 block text-xl font-bold">
-            Loading workspaces...
-          </p>
-        </div>
+        <div className="skeleton mb-[10svh] h-64 w-9/10 max-w-212.5 shadow-lg"></div>
       ) : (
         <section className="flex-center shadow-elevation-high xs:gap-7.5 mb-[10svh] w-9/10 max-w-212.5 flex-col gap-5 rounded-lg bg-white/40 px-8 py-11">
           {workspaces && workspaces.length > 0 ? (
