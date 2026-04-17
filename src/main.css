@@ -5,6 +5,7 @@
   name: "valentine";
   default: true;
   --color-accent: #fd3a84;
+  --color-base-content: #000000;
 }
 
 @theme {

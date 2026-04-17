@@ -60,7 +60,7 @@ function DrawerMenu({ children }: PropsWithChildren) {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <ul className="menu bg-base-200 min-h-full w-80 p-4 font-bold text-black">
+        <ul className="menu bg-base-200 min-h-full w-80 p-4 font-bold">
           {/* Sidebar content here */}
           <li className="inline">
             <button
@@ -73,7 +73,7 @@ function DrawerMenu({ children }: PropsWithChildren) {
           </li>
           <li className="mt-auto">
             <button
-              className="btn focus:outline-accent gap-2.5 rounded-lg border-none bg-white p-2.5 text-black hover:bg-slate-100"
+              className="btn focus:outline-accent gap-2.5 rounded-lg border-none bg-white p-2.5 hover:bg-slate-100"
               onClick={logoutUser}
             >
               <img src={logOut} />

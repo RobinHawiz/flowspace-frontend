@@ -9,7 +9,7 @@ function WorkspaceCard({ id, title }: Props) {
     <article className="relative flex items-center justify-between rounded-lg bg-white px-4 py-2.5 shadow-sm transition-all duration-200 ease-in-out hover:bg-slate-100">
       <div className="flex gap-2.5">
         <img src={workspace} alt="" />
-        <h2 className="xs:text-xl text-lg font-bold text-black">{title}</h2>
+        <h2 className="xs:text-xl text-lg font-bold">{title}</h2>
       </div>
       <Link
         to={`/workspaces/${id}`}

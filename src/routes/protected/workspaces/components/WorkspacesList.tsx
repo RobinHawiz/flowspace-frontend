@@ -20,7 +20,7 @@ function WorkspacesList() {
         <section className="flex-center shadow-elevation-high xs:gap-7.5 mb-[10svh] w-9/10 max-w-212.5 flex-col gap-5 rounded-lg bg-white/40 px-8 py-11">
           {workspaces && workspaces.length > 0 ? (
             <>
-              <h1 className="xs:text-5xl text-center text-3xl font-bold text-black">
+              <h1 className="xs:text-5xl text-center text-3xl font-bold">
                 Your workspaces
               </h1>
               <ul>
@@ -41,7 +41,7 @@ function WorkspacesList() {
                 />
               </div>
 
-              <h1 className="xs:text-5xl text-center text-3xl font-bold text-black">
+              <h1 className="xs:text-5xl text-center text-3xl font-bold">
                 No workspaces yet.
               </h1>
               <p className="xs:text-base text-center text-sm font-medium text-slate-700">
