@@ -4,6 +4,7 @@ import {
   type AppUserCredentials,
   type AppUserRegistration,
 } from "@customTypes/appUser";
+import delay from "@utils/delay";
 
 export async function registerUser(appUser: AppUserRegistration) {
   const options = {
@@ -13,6 +14,8 @@ export async function registerUser(appUser: AppUserRegistration) {
     },
     body: JSON.stringify(appUser),
   };
+  // Simulate network latency.
+  await delay(700);
   await request(`/auth/register`, options);
 }
 
@@ -25,6 +28,8 @@ export async function loginUser(creds: AppUserCredentials) {
     body: JSON.stringify(creds),
     credentials: "include" as const,
   };
+  // Simulate network latency.
+  await delay(700);
   await request(`/auth/login`, options);
 }
 
