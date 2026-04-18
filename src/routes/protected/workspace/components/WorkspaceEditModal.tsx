@@ -64,9 +64,14 @@ function WorkspaceEditModal({ workspaceId }: Props) {
           case 401:
             await handleExpiredSession();
             break;
+          case 403:
+            setErrorMessage(
+              "You don't have permission to edit this workspace.",
+            );
+            break;
           case 400:
             setErrorMessage(
-              "Something went wrong while submitting the form. Please try again.",
+              "Something went wrong while editing the workspace. Please try again.",
             );
             break;
           default:
