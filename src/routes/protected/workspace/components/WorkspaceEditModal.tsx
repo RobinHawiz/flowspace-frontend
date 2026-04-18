@@ -1,6 +1,10 @@
 import { useState, type SubmitEvent } from "react";
+import { useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import { workspaceEditMutationOptions } from "@hooks/queryOptions";
+import {
+  workspaceDeleteMutationOptions,
+  workspaceEditMutationOptions,
+} from "@hooks/queryOptions";
 import useHandleExpiredSession from "@hooks/useHandleExpiredSession";
 import getUnexpectedFormErrorMessage from "@utils/getUnexpectedFormErrorMessage";
 import { workspaceUpdateSchema } from "@customTypes/workspace";
@@ -8,6 +12,7 @@ import { AppError } from "@customTypes/appError";
 import FormModal from "@components/FormModal";
 import { toast } from "react-toastify";
 import save from "@images/save.svg";
+import deleteIcon from "@images/delete.svg";
 
 type Props = {
   workspaceId: string;
@@ -17,10 +22,13 @@ const EDIT_WORKSPACE_MODAL_ID = "edit_workspace_dialog";
 const FORM_ID = "edit_workspace_form";
 
 function WorkspaceEditModal({ workspaceId }: Props) {
+  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   const handleExpiredSession = useHandleExpiredSession();
   const { mutateAsync: workspaceEditMutation, isPending: isUpdating } =
     useMutation(workspaceEditMutationOptions());
+  const { mutateAsync: workspaceDeleteMutation, isPending: isDeleting } =
+    useMutation(workspaceDeleteMutationOptions());
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -72,6 +80,47 @@ function WorkspaceEditModal({ workspaceId }: Props) {
     }
   };
 
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this workspace? This action cannot be undone.",
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await workspaceDeleteMutation(Number(workspaceId));
+      const modal = document.getElementById(
+        EDIT_WORKSPACE_MODAL_ID,
+      ) as HTMLDialogElement;
+      modal.close();
+      toast.success("Workspace deleted successfully!");
+      navigate("/workspaces");
+    } catch (err) {
+      if (err instanceof AppError) {
+        switch (err.statusCode) {
+          case 401:
+            await handleExpiredSession();
+            break;
+          case 403:
+            setErrorMessage(
+              "You don't have permission to delete this workspace.",
+            );
+            break;
+          case 400:
+            setErrorMessage(
+              "Something went wrong while deleting the workspace. Please try again.",
+            );
+            break;
+          default:
+            setErrorMessage("An unexpected error occurred. Please try again.");
+        }
+        console.error(err.message);
+      } else {
+        const errorMessage = getUnexpectedFormErrorMessage(err);
+        setErrorMessage(errorMessage);
+      }
+    }
+  };
+
   const resetForm = () => {
     setErrorMessage("");
     const form = document.getElementById(FORM_ID) as HTMLFormElement;
@@ -104,17 +153,30 @@ function WorkspaceEditModal({ workspaceId }: Props) {
             </p>
           </div>
         )}
-        {isUpdating && (
+        {(isUpdating || isDeleting) && (
           <div className="flex-center flex-col">
             <span className="loading loading-spinner text-accent w-8 sm:w-12"></span>
             <p className="text-accent mt-2 block text-sm sm:text-base">
-              Updating workspace...
+              {isUpdating ? "Updating workspace..." : "Deleting workspace..."}
             </p>
           </div>
         )}
-        <button className="btn btn-primary gap-2.5 rounded-lg">
-          Save changes <img src={save} />
-        </button>
+        <div className="flex gap-4">
+          <button
+            type="button"
+            disabled={isUpdating || isDeleting}
+            onClick={handleDelete}
+            className="btn btn-primary flex-1 gap-2.5 rounded-lg border-none bg-red-200 text-red-500 focus:outline-red-500"
+          >
+            Delete <img src={deleteIcon} />
+          </button>
+          <button
+            disabled={isUpdating || isDeleting}
+            className="btn btn-primary flex-1 gap-2.5 rounded-lg"
+          >
+            Save changes <img src={save} />
+          </button>
+        </div>
       </form>
     </FormModal>
   );

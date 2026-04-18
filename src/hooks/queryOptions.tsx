@@ -3,6 +3,7 @@ import { queryClient } from "@src/queryClient";
 import { getUser, registerUser } from "@api/appUser";
 import {
   createWorkspace,
+  deleteWorkspace,
   getWorkspace,
   getWorkspaces,
   updateWorkspace,
@@ -27,7 +28,6 @@ export function workspaceCreationMutationOptions() {
       queryClient.setQueryData<Array<WorkspaceResponse>>(
         ["workspaces"],
         (oldData) => {
-          // Update the cached data with the new workspace.
           return oldData ? [...oldData, workspace] : [workspace];
         },
       );
@@ -53,6 +53,22 @@ export function workspaceEditMutationOptions() {
         ["workspaces", workspace.id],
         (oldData) => {
           return oldData ? { ...oldData, ...workspace } : oldData;
+        },
+      );
+    },
+  });
+}
+
+export function workspaceDeleteMutationOptions() {
+  return mutationOptions({
+    mutationFn: (workspaceId: number) => deleteWorkspace(workspaceId),
+    onSuccess: (_data, workspaceId) => {
+      queryClient.invalidateQueries({ queryKey: ["workspaces", workspaceId] });
+      queryClient.setQueryData<Array<WorkspaceResponse>>(
+        ["workspaces"],
+        (oldData) => {
+          if (!oldData) return oldData;
+          return oldData.filter((w) => w.id !== workspaceId);
         },
       );
     },

@@ -62,3 +62,14 @@ export async function updateWorkspace(workspace: WorkspaceUpdate) {
   };
   await request(`/workspaces/${workspace.id}`, options);
 }
+
+export async function deleteWorkspace(workspaceId: number) {
+  // Simulate network delay
+  await delay(700);
+
+  const options = {
+    method: "DELETE" as const,
+    credentials: "include" as const,
+  };
+  await request(`/workspaces/${workspaceId}`, options);
+}
