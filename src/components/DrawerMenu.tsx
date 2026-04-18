@@ -2,7 +2,11 @@ import { useState, type PropsWithChildren } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { useAuth } from "@contexts/AuthProvider";
-import type { WorkspaceResponse } from "@customTypes/workspace";
+import MembersDropdown from "@components/MembersDropdown";
+import type {
+  WorkspaceMembersResponse,
+  WorkspaceResponse,
+} from "@customTypes/workspace";
 import openMenu from "@images/open-menu.svg";
 import closeMenu from "@images/close-menu.svg";
 import logOut from "@images/log-out.svg";
@@ -10,8 +14,11 @@ import edit from "@images/edit.svg";
 import logo from "@images/logo.svg";
 import delay from "@utils/delay";
 
+const MEMBERS_DROPDOWN_ID = "members-dropdown";
+
 interface DrawerMenuProps extends PropsWithChildren {
   workspace?: WorkspaceResponse;
+  workspaceMembers?: Array<WorkspaceMembersResponse>;
   isLoading?: boolean;
   openEditWorkspaceModal?: () => void;
 }
@@ -19,6 +26,7 @@ interface DrawerMenuProps extends PropsWithChildren {
 function DrawerMenu({
   children,
   workspace,
+  workspaceMembers,
   isLoading,
   openEditWorkspaceModal,
 }: DrawerMenuProps) {
@@ -33,6 +41,14 @@ function DrawerMenu({
     // Wait for the drawer to open before focusing the button, otherwise it won't work before the drawer has begun opening.
     if (!checked) await delay(200);
     elem?.focus();
+    closeMembersDropdown();
+  };
+
+  const closeMembersDropdown = () => {
+    const dropdown = document.getElementById(
+      MEMBERS_DROPDOWN_ID,
+    ) as HTMLElement | null;
+    dropdown?.hidePopover();
   };
 
   const logoutUser = async () => {
@@ -100,6 +116,11 @@ function DrawerMenu({
                 <img src={edit} />
                 <p className="mr-auto">Edit workspace</p>
               </button>
+            </li>
+          )}
+          {workspaceMembers && (
+            <li>
+              <MembersDropdown workspaceMembers={workspaceMembers} />
             </li>
           )}
           <li className="mt-auto">

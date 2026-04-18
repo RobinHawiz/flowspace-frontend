@@ -1,5 +1,6 @@
 import request from "@api/request";
 import {
+  workspaceMembersResponseSchema,
   workspaceResponseSchema,
   type WorkspaceCreation,
   type WorkspaceUpdate,
@@ -72,4 +73,21 @@ export async function deleteWorkspace(workspaceId: number) {
     credentials: "include" as const,
   };
   await request(`/workspaces/${workspaceId}`, options);
+}
+
+export async function getWorkspaceMembers(id: number) {
+  const options = {
+    method: "GET" as const,
+    credentials: "include" as const,
+  };
+  // Simulate network latency.
+  await delay(700);
+  const response = (await request(
+    `/workspaces/${id}/members`,
+    options,
+  )) as Array<unknown>;
+  const workspace = response.map((member: unknown) =>
+    workspaceMembersResponseSchema.parse(member),
+  );
+  return workspace;
 }

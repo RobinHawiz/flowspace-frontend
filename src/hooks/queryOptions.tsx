@@ -5,6 +5,7 @@ import {
   createWorkspace,
   deleteWorkspace,
   getWorkspace,
+  getWorkspaceMembers,
   getWorkspaces,
   updateWorkspace,
 } from "@api/workspace";
@@ -95,6 +96,14 @@ export function workspaceQueryOptions(id: number) {
   return queryOptions({
     queryKey: ["workspaces", id],
     queryFn: () => getWorkspace(id),
+    throwOnError: true,
+  });
+}
+
+export function workspaceMembersQueryOptions(id: number) {
+  return queryOptions({
+    queryKey: ["workspaces", "members", id],
+    queryFn: () => getWorkspaceMembers(id),
     throwOnError: true,
   });
 }

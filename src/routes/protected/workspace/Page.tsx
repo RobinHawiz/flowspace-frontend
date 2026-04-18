@@ -2,7 +2,10 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import WorkspaceEditModal from "@protectedRoutes/workspace/components/WorkspaceEditModal";
 import DrawerMenu from "@components/DrawerMenu";
-import { workspaceQueryOptions } from "@hooks/queryOptions";
+import {
+  workspaceMembersQueryOptions,
+  workspaceQueryOptions,
+} from "@hooks/queryOptions";
 
 const EDIT_WORKSPACE_MODAL_ID = "edit_workspace_dialog";
 
@@ -26,9 +29,11 @@ export function ErrorBoundary() {
 
 export function Component() {
   const { workspaceId } = useParams<{ workspaceId: string }>();
-  const { data: workspace, isFetching } = useQuery(
+  const { data: workspace, isFetching: isFetchingWorkspace } = useQuery(
     workspaceQueryOptions(Number(workspaceId!)),
   );
+  const { data: workspaceMembers, isFetching: isFetchingWorkspaceMembers } =
+    useQuery(workspaceMembersQueryOptions(Number(workspaceId!)));
 
   const openEditWorkspaceModal = () => {
     const modal = document.getElementById(
@@ -40,11 +45,12 @@ export function Component() {
   return (
     <DrawerMenu
       workspace={workspace}
-      isLoading={isFetching}
+      workspaceMembers={workspaceMembers}
+      isLoading={isFetchingWorkspace || isFetchingWorkspaceMembers}
       openEditWorkspaceModal={openEditWorkspaceModal}
     >
       <div className="flex-center bg-gradient min-h-[90svh]">
-        {isFetching ? (
+        {isFetchingWorkspace || isFetchingWorkspaceMembers ? (
           <div className="skeleton h-64 w-64 shadow-lg"></div>
         ) : (
           <></>

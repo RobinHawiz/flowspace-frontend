@@ -29,3 +29,15 @@ export const workspaceUpdateSchema = z.object({
     .min(1, "Title must be between 1 and 50 characters.")
     .max(50, "Title must be between 1 and 50 characters."),
 });
+
+export type WorkspaceMembersResponse = z.infer<
+  typeof workspaceMembersResponseSchema
+>;
+
+export const workspaceMembersResponseSchema = z.object({
+  id: z.number(),
+  firstName: z.string(),
+  lastName: z.string(),
+  email: z.email(),
+  role: z.enum(["admin", "member"]),
+});
