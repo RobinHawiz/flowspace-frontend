@@ -14,13 +14,13 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/sign-up",
-        lazy: () => import("@publicRoutes/sign-up/Page"),
+        index: true,
+        lazy: () => import("@publicRoutes/log-in/Page"),
         hydrateFallbackElement: <></>,
       },
       {
-        path: "/log-in",
-        lazy: () => import("@publicRoutes/log-in/Page"),
+        path: "/sign-up",
+        lazy: () => import("@publicRoutes/sign-up/Page"),
         hydrateFallbackElement: <></>,
       },
     ],

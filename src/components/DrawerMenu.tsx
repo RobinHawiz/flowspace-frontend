@@ -37,7 +37,7 @@ function DrawerMenu({
 
   const logoutUser = async () => {
     await logout();
-    navigate("/log-in");
+    navigate("/");
     toast.info("You've successfully logged out.");
   };
 

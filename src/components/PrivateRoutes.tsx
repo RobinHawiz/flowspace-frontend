@@ -11,7 +11,7 @@ function PrivateRoutes() {
       <Outlet />
     </main>
   ) : (
-    <Navigate to="/log-in" />
+    <Navigate to="/" />
   );
 }
 

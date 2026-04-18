@@ -47,7 +47,7 @@ function SignUpForm() {
         password: result.data.password,
       };
       await appUserRegisterMutation(appUser);
-      navigate("/log-in");
+      navigate("/");
       toast.success("Your account has been created. You can now log in.");
     } catch (err) {
       if (err instanceof AppError) {
@@ -191,7 +191,7 @@ function SignUpForm() {
         <p className="py-3 text-center text-sm font-medium text-slate-700">
           Already have an account?{" "}
           <NavLink
-            to="/log-in"
+            to="/"
             className="text-accent focus-visible:ring-accent rounded-lg p-0.5 transition-all duration-200 ease-in-out hover:underline focus-visible:ring-2 focus-visible:outline-none"
           >
             Log in
