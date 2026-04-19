@@ -6,8 +6,10 @@ import {
   workspaceMembersQueryOptions,
   workspaceQueryOptions,
 } from "@hooks/queryOptions";
+import MemberAddModal from "@protectedRoutes/workspace/components/MemberAddModal";
 
 const EDIT_WORKSPACE_MODAL_ID = "edit_workspace_dialog";
+const ADD_MEMBER_MODAL_ID = "add_member_dialog";
 
 export function ErrorBoundary() {
   return (
@@ -42,12 +44,20 @@ export function Component() {
     modal.showModal();
   };
 
+  const openAddWorkspaceMembersModal = () => {
+    const modal = document.getElementById(
+      ADD_MEMBER_MODAL_ID,
+    ) as HTMLDialogElement;
+    modal.showModal();
+  };
+
   return (
     <DrawerMenu
       workspace={workspace}
       workspaceMembers={workspaceMembers}
       isLoading={isFetchingWorkspace || isFetchingWorkspaceMembers}
       openEditWorkspaceModal={openEditWorkspaceModal}
+      openAddWorkspaceMembersModal={openAddWorkspaceMembersModal}
     >
       <div className="flex-center bg-gradient min-h-[90svh]">
         {isFetchingWorkspace || isFetchingWorkspaceMembers ? (
@@ -57,6 +67,7 @@ export function Component() {
         )}
       </div>
       <WorkspaceEditModal workspaceId={workspaceId!} />
+      <MemberAddModal workspaceId={workspaceId!} />
     </DrawerMenu>
   );
 }

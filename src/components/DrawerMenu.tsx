@@ -11,6 +11,7 @@ import openMenu from "@images/open-menu.svg";
 import closeMenu from "@images/close-menu.svg";
 import logOut from "@images/log-out.svg";
 import edit from "@images/edit.svg";
+import addMember from "@images/add-member.svg";
 import logo from "@images/logo.svg";
 import delay from "@utils/delay";
 
@@ -21,6 +22,7 @@ interface DrawerMenuProps extends PropsWithChildren {
   workspaceMembers?: Array<WorkspaceMembersResponse>;
   isLoading?: boolean;
   openEditWorkspaceModal?: () => void;
+  openAddWorkspaceMembersModal?: () => void;
 }
 
 function DrawerMenu({
@@ -29,6 +31,7 @@ function DrawerMenu({
   workspaceMembers,
   isLoading,
   openEditWorkspaceModal,
+  openAddWorkspaceMembersModal,
 }: DrawerMenuProps) {
   const { logout } = useAuth();
   const navigate = useNavigate();
@@ -87,7 +90,17 @@ function DrawerMenu({
               <img src={logo} alt="Flowspace logo" />
             </div>
           )}
+          {workspaceMembers && openAddWorkspaceMembersModal && (
+            <button
+              className="btn focus:outline-accent ml-auto gap-2.5 rounded-lg border-none bg-pink-200 p-2.5 text-rose-600 hover:bg-pink-300"
+              onClick={openAddWorkspaceMembersModal}
+            >
+              <p className="mr-auto">Add member</p>
+              <img src={addMember} />
+            </button>
+          )}
         </header>
+        {/* Page content */}
         {children}
       </div>
       <nav className="drawer-side">

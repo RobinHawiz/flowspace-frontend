@@ -2,6 +2,7 @@ import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import { queryClient } from "@src/queryClient";
 import { getUser, registerUser } from "@api/appUser";
 import {
+  addWorkspaceMember,
   createWorkspace,
   deleteWorkspace,
   getWorkspace,
@@ -12,6 +13,8 @@ import {
 import type { AppUserRegistration } from "@customTypes/appUser";
 import type {
   WorkspaceCreation,
+  WorkspaceMembersAdd,
+  WorkspaceMembersResponse,
   WorkspaceResponse,
   WorkspaceUpdate,
 } from "@customTypes/workspace";
@@ -70,6 +73,20 @@ export function workspaceDeleteMutationOptions() {
         (oldData) => {
           if (!oldData) return oldData;
           return oldData.filter((w) => w.id !== workspaceId);
+        },
+      );
+    },
+  });
+}
+
+export function workspaceMembersAddMutationOptions() {
+  return mutationOptions({
+    mutationFn: (payload: WorkspaceMembersAdd) => addWorkspaceMember(payload),
+    onSuccess: (workspaceMember, payload) => {
+      queryClient.setQueryData<Array<WorkspaceMembersResponse>>(
+        ["workspaces", "members", payload.id],
+        (oldData) => {
+          return oldData ? [...oldData, workspaceMember] : [workspaceMember];
         },
       );
     },

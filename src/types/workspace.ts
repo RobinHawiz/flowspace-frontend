@@ -41,3 +41,10 @@ export const workspaceMembersResponseSchema = z.object({
   email: z.email(),
   role: z.enum(["admin", "member"]),
 });
+
+export type WorkspaceMembersAdd = z.infer<typeof workspaceMembersAddSchema>;
+
+export const workspaceMembersAddSchema = z.object({
+  id: z.number(),
+  email: z.email(),
+});

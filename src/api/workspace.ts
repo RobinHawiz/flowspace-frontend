@@ -3,6 +3,7 @@ import {
   workspaceMembersResponseSchema,
   workspaceResponseSchema,
   type WorkspaceCreation,
+  type WorkspaceMembersAdd,
   type WorkspaceUpdate,
 } from "@customTypes/workspace";
 import delay from "@utils/delay";
@@ -90,4 +91,20 @@ export async function getWorkspaceMembers(id: number) {
     workspaceMembersResponseSchema.parse(member),
   );
   return workspace;
+}
+
+export async function addWorkspaceMember(payload: WorkspaceMembersAdd) {
+  const options = {
+    method: "POST" as const,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email: payload.email }),
+    credentials: "include" as const,
+  };
+  // Simulate network latency.
+  await delay(700);
+  const response = await request(`/workspaces/${payload.id}/members`, options);
+  const workspaceMember = workspaceMembersResponseSchema.parse(response);
+  return workspaceMember;
 }
