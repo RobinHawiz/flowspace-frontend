@@ -1,6 +1,7 @@
 import type { WorkspaceMembersResponse } from "@customTypes/workspace";
 import members from "@images/members.svg";
 import removeMember from "@images/remove-member.svg";
+import admin from "@images/admin.svg";
 
 const MEMBERS_DROPDOWN_ID = "members-dropdown";
 
@@ -27,15 +28,16 @@ function MembersDropdown({ workspaceMembers }: Props) {
       >
         {workspaceMembers.map((member) => (
           <li key={member.id}>
-            <button className="rounded-lg">
-              <span className="text-accent flex-center border-accent flex h-8 w-8 rounded-full border-2 border-solid bg-pink-100 font-bold">
+            <button className="flex rounded-lg">
+              <span className="flex-center flex h-8 w-8 rounded-full bg-pink-200 font-bold text-rose-600">
                 {member.firstName[0]}
                 {member.lastName[0]}
               </span>
+              {member.role === "admin" && <img src={admin} alt="" />}
               <p className="font-bold">
                 {member.firstName} {member.lastName}
               </p>
-              <img src={removeMember} alt="" />
+              <img className="ml-auto" src={removeMember} alt="" />
             </button>
           </li>
         ))}
