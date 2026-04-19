@@ -8,12 +8,14 @@ import {
   getWorkspace,
   getWorkspaceMembers,
   getWorkspaces,
+  removeWorkspaceMember,
   updateWorkspace,
 } from "@api/workspace";
 import type { AppUserRegistration } from "@customTypes/appUser";
 import type {
   WorkspaceCreation,
   WorkspaceMembersAdd,
+  WorkspaceMembersRemove,
   WorkspaceMembersResponse,
   WorkspaceResponse,
   WorkspaceUpdate,
@@ -87,6 +89,22 @@ export function workspaceMembersAddMutationOptions() {
         ["workspaces", "members", payload.id],
         (oldData) => {
           return oldData ? [...oldData, workspaceMember] : [workspaceMember];
+        },
+      );
+    },
+  });
+}
+
+export function workspaceMembersRemoveMutationOptions() {
+  return mutationOptions({
+    mutationFn: (payload: WorkspaceMembersRemove) =>
+      removeWorkspaceMember(payload),
+    onSuccess: (_data, payload) => {
+      queryClient.setQueryData<Array<WorkspaceMembersResponse>>(
+        ["workspaces", "members", payload.workspaceId],
+        (oldData) => {
+          if (!oldData) return oldData;
+          return oldData.filter((m) => m.id !== payload.appUserId);
         },
       );
     },

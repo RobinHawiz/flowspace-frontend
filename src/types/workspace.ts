@@ -48,3 +48,12 @@ export const workspaceMembersAddSchema = z.object({
   id: z.number(),
   email: z.email(),
 });
+
+export type WorkspaceMembersRemove = z.infer<
+  typeof workspaceMembersRemoveSchema
+>;
+
+export const workspaceMembersRemoveSchema = z.object({
+  workspaceId: z.number(),
+  appUserId: z.number(),
+});

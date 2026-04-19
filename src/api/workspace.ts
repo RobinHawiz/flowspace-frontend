@@ -4,6 +4,7 @@ import {
   workspaceResponseSchema,
   type WorkspaceCreation,
   type WorkspaceMembersAdd,
+  type WorkspaceMembersRemove,
   type WorkspaceUpdate,
 } from "@customTypes/workspace";
 import delay from "@utils/delay";
@@ -107,4 +108,17 @@ export async function addWorkspaceMember(payload: WorkspaceMembersAdd) {
   const response = await request(`/workspaces/${payload.id}/members`, options);
   const workspaceMember = workspaceMembersResponseSchema.parse(response);
   return workspaceMember;
+}
+
+export async function removeWorkspaceMember(payload: WorkspaceMembersRemove) {
+  const options = {
+    method: "DELETE" as const,
+    credentials: "include" as const,
+  };
+  // Simulate network latency.
+  await delay(700);
+  await request(
+    `/workspaces/${payload.workspaceId}/members/${payload.appUserId}`,
+    options,
+  );
 }

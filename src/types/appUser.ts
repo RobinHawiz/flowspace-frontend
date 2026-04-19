@@ -36,6 +36,7 @@ export const appUserCredentialsSchema = z.object({
 export type AppUserResponse = z.infer<typeof appUserResponseSchema>;
 
 export const appUserResponseSchema = z.object({
+  id: z.number(),
   firstName: z.string(),
   lastName: z.string(),
   email: z.email(),

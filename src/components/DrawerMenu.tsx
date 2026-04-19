@@ -2,7 +2,7 @@ import { useState, type PropsWithChildren } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { useAuth } from "@contexts/AuthProvider";
-import MembersDropdown from "@components/MembersDropdown";
+import MembersDropdown from "@protectedRoutes/workspace/components/MembersDropdown";
 import type {
   WorkspaceMembersResponse,
   WorkspaceResponse,
@@ -131,9 +131,12 @@ function DrawerMenu({
               </button>
             </li>
           )}
-          {workspaceMembers && (
+          {workspace && workspaceMembers && (
             <li>
-              <MembersDropdown workspaceMembers={workspaceMembers} />
+              <MembersDropdown
+                workspaceId={workspace.id}
+                workspaceMembers={workspaceMembers}
+              />
             </li>
           )}
           <li className="mt-auto">
