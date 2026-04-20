@@ -86,7 +86,7 @@ export function workspaceMembersAddMutationOptions() {
     mutationFn: (payload: WorkspaceMembersAdd) => addWorkspaceMember(payload),
     onSuccess: (workspaceMember, payload) => {
       queryClient.setQueryData<Array<WorkspaceMembersResponse>>(
-        ["workspaces", "members", payload.id],
+        ["workspaces", "members", payload.workspaceId],
         (oldData) => {
           return oldData ? [...oldData, workspaceMember] : [workspaceMember];
         },
@@ -127,18 +127,18 @@ export function workspacesQueryOptions() {
   });
 }
 
-export function workspaceQueryOptions(id: number) {
+export function workspaceQueryOptions(workspaceId: number) {
   return queryOptions({
-    queryKey: ["workspaces", id],
-    queryFn: () => getWorkspace(id),
+    queryKey: ["workspaces", workspaceId],
+    queryFn: () => getWorkspace(workspaceId),
     throwOnError: true,
   });
 }
 
-export function workspaceMembersQueryOptions(id: number) {
+export function workspaceMembersQueryOptions(workspaceId: number) {
   return queryOptions({
-    queryKey: ["workspaces", "members", id],
-    queryFn: () => getWorkspaceMembers(id),
+    queryKey: ["workspaces", "members", workspaceId],
+    queryFn: () => getWorkspaceMembers(workspaceId),
     throwOnError: true,
   });
 }

@@ -45,7 +45,7 @@ export const workspaceMembersResponseSchema = z.object({
 export type WorkspaceMembersAdd = z.infer<typeof workspaceMembersAddSchema>;
 
 export const workspaceMembersAddSchema = z.object({
-  id: z.number(),
+  workspaceId: z.number(),
   email: z.email(),
 });
 

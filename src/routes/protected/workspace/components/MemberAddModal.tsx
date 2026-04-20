@@ -28,10 +28,13 @@ function MemberAddModal({ workspaceId }: Props) {
 
     const form = e.currentTarget;
     const formData = new FormData(form);
-    formData.append("id", workspaceId);
+    formData.append("workspaceId", workspaceId);
     const data = Object.fromEntries(formData);
     // We need to convert the id to a number before validation, since form data is always string values
-    const dataToParse = { id: Number(data.id), email: data.email };
+    const dataToParse = {
+      workspaceId: Number(data.workspaceId),
+      email: data.email,
+    };
 
     // Validation
     const result = workspaceMembersAddSchema.safeParse(dataToParse);

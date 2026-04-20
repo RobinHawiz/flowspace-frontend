@@ -23,14 +23,14 @@ export async function getWorkspaces() {
   return workspaces;
 }
 
-export async function getWorkspace(id: number) {
+export async function getWorkspace(workspaceId: number) {
   const options = {
     method: "GET" as const,
     credentials: "include" as const,
   };
   // Simulate network latency.
   await delay(700);
-  const response = await request(`/workspaces/${id}`, options);
+  const response = await request(`/workspaces/${workspaceId}`, options);
   const workspace = workspaceResponseSchema.parse(response);
   return workspace;
 }
@@ -77,7 +77,7 @@ export async function deleteWorkspace(workspaceId: number) {
   await request(`/workspaces/${workspaceId}`, options);
 }
 
-export async function getWorkspaceMembers(id: number) {
+export async function getWorkspaceMembers(workspaceId: number) {
   const options = {
     method: "GET" as const,
     credentials: "include" as const,
@@ -85,7 +85,7 @@ export async function getWorkspaceMembers(id: number) {
   // Simulate network latency.
   await delay(700);
   const response = (await request(
-    `/workspaces/${id}/members`,
+    `/workspaces/${workspaceId}/members`,
     options,
   )) as Array<unknown>;
   const workspace = response.map((member: unknown) =>
@@ -105,7 +105,10 @@ export async function addWorkspaceMember(payload: WorkspaceMembersAdd) {
   };
   // Simulate network latency.
   await delay(700);
-  const response = await request(`/workspaces/${payload.id}/members`, options);
+  const response = await request(
+    `/workspaces/${payload.workspaceId}/members`,
+    options,
+  );
   const workspaceMember = workspaceMembersResponseSchema.parse(response);
   return workspaceMember;
 }
