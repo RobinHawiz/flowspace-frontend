@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import WorkspaceEditModal from "@protectedRoutes/workspace/components/WorkspaceEditModal";
 import DrawerMenu from "@components/DrawerMenu";
 import {
+  workspaceColumnsQueryOptions,
   workspaceMembersQueryOptions,
   workspaceQueryOptions,
 } from "@hooks/queryOptions";
@@ -36,6 +37,9 @@ export function Component() {
   );
   const { data: workspaceMembers, isFetching: isFetchingWorkspaceMembers } =
     useQuery(workspaceMembersQueryOptions(Number(workspaceId!)));
+  const { isFetching: isFetchingWorkspaceColumns } = useQuery(
+    workspaceColumnsQueryOptions(Number(workspaceId!)),
+  );
 
   const openEditWorkspaceModal = () => {
     const modal = document.getElementById(
@@ -55,12 +59,18 @@ export function Component() {
     <DrawerMenu
       workspace={workspace}
       workspaceMembers={workspaceMembers}
-      isLoading={isFetchingWorkspace || isFetchingWorkspaceMembers}
+      isLoading={
+        isFetchingWorkspace ||
+        isFetchingWorkspaceMembers ||
+        isFetchingWorkspaceColumns
+      }
       openEditWorkspaceModal={openEditWorkspaceModal}
       openAddWorkspaceMembersModal={openAddWorkspaceMembersModal}
     >
       <div className="flex-center bg-gradient min-h-[90svh]">
-        {isFetchingWorkspace || isFetchingWorkspaceMembers ? (
+        {isFetchingWorkspace ||
+        isFetchingWorkspaceMembers ||
+        isFetchingWorkspaceColumns ? (
           <div className="skeleton h-64 w-64 shadow-lg"></div>
         ) : (
           <></>

@@ -20,6 +20,7 @@ import type {
   WorkspaceResponse,
   WorkspaceUpdate,
 } from "@customTypes/workspace";
+import { getWorkspaceColumns } from "@api/workspaceColumn";
 
 export function appUserRegisterMutationOptions() {
   return mutationOptions({
@@ -139,6 +140,14 @@ export function workspaceMembersQueryOptions(workspaceId: number) {
   return queryOptions({
     queryKey: ["workspaces", "members", workspaceId],
     queryFn: () => getWorkspaceMembers(workspaceId),
+    throwOnError: true,
+  });
+}
+
+export function workspaceColumnsQueryOptions(workspaceId: number) {
+  return queryOptions({
+    queryKey: ["workspaces", "columns", workspaceId],
+    queryFn: () => getWorkspaceColumns(workspaceId),
     throwOnError: true,
   });
 }
