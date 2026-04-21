@@ -8,6 +8,7 @@ import {
   workspaceQueryOptions,
 } from "@hooks/queryOptions";
 import MemberAddModal from "@protectedRoutes/workspace/components/MemberAddModal";
+import WorkspaceColumns from "@protectedRoutes/workspace/components/WorkspaceColumns";
 
 const EDIT_WORKSPACE_MODAL_ID = "edit_workspace_dialog";
 const ADD_MEMBER_MODAL_ID = "add_member_dialog";
@@ -37,9 +38,8 @@ export function Component() {
   );
   const { data: workspaceMembers, isFetching: isFetchingWorkspaceMembers } =
     useQuery(workspaceMembersQueryOptions(Number(workspaceId!)));
-  const { isFetching: isFetchingWorkspaceColumns } = useQuery(
-    workspaceColumnsQueryOptions(Number(workspaceId!)),
-  );
+  const { data: workspaceColumns, isFetching: isFetchingWorkspaceColumns } =
+    useQuery(workspaceColumnsQueryOptions(Number(workspaceId!)));
 
   const openEditWorkspaceModal = () => {
     const modal = document.getElementById(
@@ -67,13 +67,15 @@ export function Component() {
       openEditWorkspaceModal={openEditWorkspaceModal}
       openAddWorkspaceMembersModal={openAddWorkspaceMembersModal}
     >
-      <div className="flex-center bg-gradient min-h-[90svh]">
+      <div className="bg-gradient min-h-[90svh] overflow-scroll">
         {isFetchingWorkspace ||
         isFetchingWorkspaceMembers ||
         isFetchingWorkspaceColumns ? (
-          <div className="skeleton h-64 w-64 shadow-lg"></div>
+          <div className="mx-auto flex w-[90%] min-w-70 pt-4">
+            <div className="skeleton h-64 w-64 shadow-md"></div>
+          </div>
         ) : (
-          <></>
+          <WorkspaceColumns workspaceColumns={workspaceColumns!} />
         )}
       </div>
       <WorkspaceEditModal workspaceId={workspaceId!} />
