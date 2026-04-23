@@ -65,7 +65,7 @@ function WorkspaceColumns({
   const handleExpiredSession = useHandleExpiredSession();
 
   return (
-    <div className="flex w-max gap-7.5 px-25 pt-4">
+    <div className="xs:px-25 flex w-max gap-7.5 px-7.5 pt-4">
       <ul className="flex gap-7.5">
         <DragDropProvider
           onDragEnd={async (event) => {
