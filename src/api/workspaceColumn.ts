@@ -1,6 +1,7 @@
 import request from "@api/request";
 import {
   workspaceColumnResponseSchema,
+  type WorkspaceColumnCreation,
   type WorkspaceColumnOrderUpdate,
 } from "@customTypes/workspaceColumn";
 import delay from "@utils/delay";
@@ -40,4 +41,26 @@ export async function updateWorkspaceColumnOrder(
     `/workspaces/${payload.workspaceId}/workspace-columns/${payload.workspaceColumnId}/order`,
     options,
   );
+}
+
+export async function addWorkspaceColumn(payload: WorkspaceColumnCreation) {
+  const options = {
+    method: "POST" as const,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title: payload.title,
+      workspaceColumnOrder: payload.workspaceColumnOrder,
+    }),
+    credentials: "include" as const,
+  };
+  // Simulate network latency.
+  await delay(700);
+  const response = (await request(
+    `/workspaces/${payload.workspaceId}/workspace-columns`,
+    options,
+  )) as unknown;
+  const workspaceColumn = workspaceColumnResponseSchema.parse(response);
+  return workspaceColumn;
 }

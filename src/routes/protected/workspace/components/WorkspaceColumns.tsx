@@ -12,6 +12,7 @@ import { AppError } from "@customTypes/appError";
 import { toast } from "react-toastify";
 import getUnexpectedFormErrorMessage from "@utils/getUnexpectedFormErrorMessage";
 import useHandleExpiredSession from "@hooks/useHandleExpiredSession";
+import addColumn from "@images/add-column.svg";
 
 function Sortable({
   id,
@@ -50,73 +51,87 @@ function Sortable({
 type Props = {
   workspaceId: number;
   workspaceColumns: Array<WorkspaceColumnResponse>;
+  openAddWorkspaceColumnModal: () => void;
 };
 
-function WorkspaceColumns({ workspaceId, workspaceColumns }: Props) {
+function WorkspaceColumns({
+  workspaceId,
+  workspaceColumns,
+  openAddWorkspaceColumnModal,
+}: Props) {
   const { mutateAsync: workspaceColumnOrderUpdate, isPending } = useMutation(
     workspaceColumnOrderUpdateMutationOptions(),
   );
   const handleExpiredSession = useHandleExpiredSession();
 
   return (
-    <ul className="mx-auto flex w-[90%] gap-7.5 pt-4">
-      <DragDropProvider
-        onDragEnd={async (event) => {
-          const { source } = event.operation;
-          if (isSortable(source)) {
-            const { initialIndex, index } = source;
-            if (initialIndex === index) return; // No change in order, so we can skip the update
-            const payload: WorkspaceColumnOrderUpdate = {
-              workspaceId,
-              workspaceColumnId: Number(source.id),
-              workspaceColumnOrderNew: index,
-              workspaceColumnOrderCurrent: initialIndex,
-            };
-            try {
-              await workspaceColumnOrderUpdate(payload);
-            } catch (err) {
-              if (err instanceof AppError) {
-                switch (err.statusCode) {
-                  case 401:
-                    await handleExpiredSession();
-                    break;
-                  case 403:
-                    toast.error(
-                      "You don't have permission to change the column order in this workspace.",
-                    );
-                    break;
-                  case 400:
-                    toast.error(
-                      "Something went wrong while changing the column order. Please try again.",
-                    );
-                    break;
-                  default:
-                    toast.error(
-                      "An unexpected error occurred. Please try again.",
-                    );
+    <div className="flex w-max gap-7.5 px-25 pt-4">
+      <ul className="flex gap-7.5">
+        <DragDropProvider
+          onDragEnd={async (event) => {
+            const { source } = event.operation;
+            if (isSortable(source)) {
+              const { initialIndex, index } = source;
+              if (initialIndex === index) return; // No change in order, so we can skip the update
+              const payload: WorkspaceColumnOrderUpdate = {
+                workspaceId,
+                workspaceColumnId: Number(source.id),
+                workspaceColumnOrderNew: index,
+                workspaceColumnOrderCurrent: initialIndex,
+              };
+              try {
+                await workspaceColumnOrderUpdate(payload);
+              } catch (err) {
+                if (err instanceof AppError) {
+                  switch (err.statusCode) {
+                    case 401:
+                      await handleExpiredSession();
+                      break;
+                    case 403:
+                      toast.error(
+                        "You don't have permission to change the column order in this workspace.",
+                      );
+                      break;
+                    case 400:
+                      toast.error(
+                        "Something went wrong while changing the column order. Please try again.",
+                      );
+                      break;
+                    default:
+                      toast.error(
+                        "An unexpected error occurred. Please try again.",
+                      );
+                  }
+                  console.error(err.message);
+                } else {
+                  const errorMessage = getUnexpectedFormErrorMessage(err);
+                  toast.error(errorMessage);
                 }
-                console.error(err.message);
-              } else {
-                const errorMessage = getUnexpectedFormErrorMessage(err);
-                toast.error(errorMessage);
               }
             }
-          }
-        }}
+          }}
+        >
+          {workspaceColumns.map((column, index) => {
+            return (
+              <Sortable
+                key={column.id}
+                id={column.id}
+                index={index}
+                column={column}
+                isPending={isPending}
+              />
+            );
+          })}
+        </DragDropProvider>
+      </ul>
+      <button
+        onClick={openAddWorkspaceColumnModal}
+        className="btn focus:outline-accent gap-2.5 self-start rounded-lg border-none bg-pink-200 p-2.5 text-rose-600 hover:bg-pink-300"
       >
-        {workspaceColumns.map((column, index) => {
-          return (
-            <Sortable
-              key={column.id}
-              id={column.id}
-              index={index}
-              column={column}
-              isPending={isPending}
-            />
-          );
-        })}
-      </DragDropProvider>
-    </ul>
+        <p className="mr-auto">Add column</p>
+        <img src={addColumn} />
+      </button>
+    </div>
   );
 }
 

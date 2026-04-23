@@ -9,7 +9,9 @@ import {
 } from "@hooks/queryOptions";
 import MemberAddModal from "@protectedRoutes/workspace/components/MemberAddModal";
 import WorkspaceColumns from "@protectedRoutes/workspace/components/WorkspaceColumns";
+import WorkspaceColumnAddModal from "@protectedRoutes/workspace/components/WorkspaceColumnAddModal";
 
+const ADD_WORKSPACE_COLUMN_MODAL_ID = "add_workspace_column_dialog";
 const EDIT_WORKSPACE_MODAL_ID = "edit_workspace_dialog";
 const ADD_MEMBER_MODAL_ID = "add_member_dialog";
 
@@ -40,6 +42,13 @@ export function Component() {
     useQuery(workspaceMembersQueryOptions(Number(workspaceId!)));
   const { data: workspaceColumns, isFetching: isFetchingWorkspaceColumns } =
     useQuery(workspaceColumnsQueryOptions(Number(workspaceId!)));
+
+  const openAddWorkspaceColumnModal = () => {
+    const modal = document.getElementById(
+      ADD_WORKSPACE_COLUMN_MODAL_ID,
+    ) as HTMLDialogElement;
+    modal.showModal();
+  };
 
   const openEditWorkspaceModal = () => {
     const modal = document.getElementById(
@@ -78,9 +87,17 @@ export function Component() {
           <WorkspaceColumns
             workspaceId={Number(workspaceId!)}
             workspaceColumns={workspaceColumns!}
+            openAddWorkspaceColumnModal={openAddWorkspaceColumnModal}
           />
         )}
       </div>
+      <WorkspaceColumnAddModal
+        workspaceId={workspaceId!}
+        workspaceColumnOrder={(workspaceColumns
+          ? workspaceColumns.length
+          : 0
+        ).toString()}
+      />
       <WorkspaceEditModal workspaceId={workspaceId!} />
       <MemberAddModal workspaceId={workspaceId!} />
     </DrawerMenu>
