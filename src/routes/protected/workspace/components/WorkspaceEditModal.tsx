@@ -179,7 +179,10 @@ function WorkspaceEditModal({ workspaceId }: Props) {
             disabled={isUpdating || isDeleting}
             className="btn btn-primary flex-1 gap-2.5 rounded-lg"
           >
-            Save changes <img src={save} />
+            <p>
+              Save <span className="xs:inline hidden">changes</span>
+            </p>
+            <img src={save} />
           </button>
         </div>
       </form>
