@@ -103,7 +103,7 @@ function WorkspaceCreateModal() {
           </div>
         )}
         <button
-          className="bg-accent outline-accent hover:bg-accent/90 btn w-full flex-1 cursor-pointer rounded-xl border-none px-6 py-4 text-base font-bold text-white"
+          className="btn btn-primary gap-2.5 rounded-lg"
           type="submit"
           disabled={isLoading}
         >
