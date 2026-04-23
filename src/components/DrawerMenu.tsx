@@ -12,6 +12,7 @@ import closeMenu from "@images/close-menu.svg";
 import logOut from "@images/log-out.svg";
 import edit from "@images/edit.svg";
 import addMember from "@images/add-member.svg";
+import addMemberDrawer from "@images/add-member-drawer.svg";
 import logo from "@images/logo.svg";
 import delay from "@utils/delay";
 
@@ -78,11 +79,11 @@ function DrawerMenu({
               htmlFor="my-drawer-5"
               className="btn drawer-button text-accent border-none not-hover:bg-transparent"
             >
-              <img src={openMenu} />
+              <img src={openMenu} className="min-w-5.5" />
             </label>
           </nav>
           {workspace !== undefined || isLoading ? (
-            <h1 className="text-2xl font-bold">
+            <h1 className="xs:text-2xl text-xl font-bold">
               {workspace?.title || <div className="skeleton h-4 w-28"></div>}
             </h1>
           ) : (
@@ -92,7 +93,7 @@ function DrawerMenu({
           )}
           {workspaceMembers && openAddWorkspaceMembersModal && (
             <button
-              className="btn focus:outline-accent ml-auto gap-2.5 rounded-lg border-none bg-pink-200 p-2.5 text-rose-600 hover:bg-pink-300"
+              className="xs:flex btn focus:outline-accent ml-auto hidden gap-2.5 rounded-lg border-none bg-pink-200 p-2.5 text-rose-600 hover:bg-pink-300"
               onClick={openAddWorkspaceMembersModal}
             >
               <p className="mr-auto">Add member</p>
@@ -137,6 +138,17 @@ function DrawerMenu({
                 workspaceId={workspace.id}
                 workspaceMembers={workspaceMembers}
               />
+            </li>
+          )}
+          {workspaceMembers && openAddWorkspaceMembersModal && (
+            <li>
+              <button
+                className="btn focus:outline-accent gap-2.5 rounded-lg border-none bg-white p-2.5 hover:bg-slate-100"
+                onClick={openAddWorkspaceMembersModal}
+              >
+                <img src={addMemberDrawer} />
+                <p className="mr-auto">Add member</p>
+              </button>
             </li>
           )}
           <li className="mt-auto">
