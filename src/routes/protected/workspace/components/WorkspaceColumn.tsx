@@ -1,13 +1,27 @@
+import type { RefObject } from "react";
 import type { WorkspaceColumnResponse } from "@customTypes/workspaceColumn";
 
 type Props = {
   workspaceColumn: WorkspaceColumnResponse;
+  isDraggingDisabled: boolean;
+  handleRef: RefObject<HTMLHeadingElement | null>;
 };
 
-function WorkspaceColumn({ workspaceColumn }: Props) {
+function WorkspaceColumn({
+  workspaceColumn,
+  isDraggingDisabled,
+  handleRef,
+}: Props) {
   return (
     <div className="border-accent w-full max-w-70 rounded-lg border border-solid bg-white/28 p-2.5 shadow-md backdrop-blur-sm">
-      <h2 className="mb-3 pl-2.5 text-lg font-bold">{workspaceColumn.title}</h2>
+      <h2
+        ref={(node) => {
+          handleRef.current = node;
+        }}
+        className={`mb-3 pl-2.5 text-lg font-bold ${isDraggingDisabled ? "cursor-auto" : "cursor-grab"}`}
+      >
+        {workspaceColumn.title}
+      </h2>
       {/* Placeholder task content, replace with actual tasks when implemented. */}
       <ul className="flex flex-col gap-3">
         <li className="rounded-lg border-l-3 border-solid border-red-500 bg-white p-2.5 shadow-sm">

@@ -25,7 +25,7 @@ function Sortable({
   column: WorkspaceColumnResponse;
   isPending: boolean;
 }) {
-  const handleRef = useRef<HTMLElement | null>(null);
+  const handleRef = useRef<HTMLHeadingElement | null>(null);
   const { ref } = useSortable({
     id,
     index,
@@ -36,13 +36,11 @@ function Sortable({
   return (
     <>
       <li ref={ref} className="relative">
-        <div
-          ref={(node) => {
-            handleRef.current = node;
-          }}
-          className={`absolute top-0 left-0 z-10 h-11 w-full ${isPending ? "cursor-auto" : "cursor-grab"}`}
-        ></div>
-        <WorkspaceColumn workspaceColumn={column} />
+        <WorkspaceColumn
+          handleRef={handleRef}
+          workspaceColumn={column}
+          isDraggingDisabled={isPending}
+        />
       </li>
     </>
   );
