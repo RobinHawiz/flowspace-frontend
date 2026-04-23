@@ -13,6 +13,7 @@ import logOut from "@images/log-out.svg";
 import edit from "@images/edit.svg";
 import addMember from "@images/add-member.svg";
 import addMemberDrawer from "@images/add-member-drawer.svg";
+import back from "@images/back.svg";
 import logo from "@images/logo.svg";
 import delay from "@utils/delay";
 
@@ -121,6 +122,17 @@ function DrawerMenu({
               <img src={closeMenu} />
             </button>
           </li>
+          {workspace && (
+            <li>
+              <button
+                className="btn focus:outline-accent gap-2.5 rounded-lg border-none bg-white p-2.5 hover:bg-slate-100"
+                onClick={() => navigate("/workspaces")}
+              >
+                <img src={back} />
+                <p className="mr-auto">Back to workspaces</p>
+              </button>
+            </li>
+          )}
           {workspace && openEditWorkspaceModal && (
             <li>
               <button
