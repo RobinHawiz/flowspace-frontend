@@ -35,3 +35,16 @@ export const WorkspaceColumnCreationSchema = z.object({
     .max(200, "Column title cannot exceed 200 characters."),
   workspaceColumnOrder: z.number(),
 });
+
+export type WorkspaceColumnTitleUpdate = z.infer<
+  typeof WorkspaceColumnTitleUpdateSchema
+>;
+
+export const WorkspaceColumnTitleUpdateSchema = z.object({
+  workspaceId: z.number(),
+  workspaceColumnId: z.number(),
+  title: z
+    .string()
+    .min(1, "Column title cannot be empty")
+    .max(200, "Column title cannot exceed 200 characters."),
+});

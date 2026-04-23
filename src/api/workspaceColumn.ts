@@ -3,6 +3,7 @@ import {
   workspaceColumnResponseSchema,
   type WorkspaceColumnCreation,
   type WorkspaceColumnOrderUpdate,
+  type WorkspaceColumnTitleUpdate,
 } from "@customTypes/workspaceColumn";
 import delay from "@utils/delay";
 
@@ -39,6 +40,27 @@ export async function updateWorkspaceColumnOrder(
 
   await request(
     `/workspaces/${payload.workspaceId}/workspace-columns/${payload.workspaceColumnId}/order`,
+    options,
+  );
+}
+
+export async function updateWorkspaceColumnTitle(
+  payload: WorkspaceColumnTitleUpdate,
+) {
+  const options = {
+    method: "PATCH" as const,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title: payload.title,
+    }),
+    credentials: "include" as const,
+  };
+  // Simulate network latency.
+  await delay(700);
+  await request(
+    `/workspaces/${payload.workspaceId}/workspace-columns/${payload.workspaceColumnId}/title`,
     options,
   );
 }

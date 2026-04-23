@@ -10,8 +10,12 @@ import {
 import MemberAddModal from "@protectedRoutes/workspace/components/MemberAddModal";
 import WorkspaceColumns from "@protectedRoutes/workspace/components/WorkspaceColumns";
 import WorkspaceColumnAddModal from "@protectedRoutes/workspace/components/WorkspaceColumnAddModal";
+import type { WorkspaceColumnResponse } from "@customTypes/workspaceColumn";
+import { useState } from "react";
+import WorkspaceColumnEditModal from "@protectedRoutes/workspace/components/WorkspaceColumnEditModal";
 
 const ADD_WORKSPACE_COLUMN_MODAL_ID = "add_workspace_column_dialog";
+const EDIT_WORKSPACE_COLUMN_MODAL_ID = "edit_workspace_column_dialog";
 const EDIT_WORKSPACE_MODAL_ID = "edit_workspace_dialog";
 const ADD_MEMBER_MODAL_ID = "add_member_dialog";
 
@@ -42,10 +46,22 @@ export function Component() {
     useQuery(workspaceMembersQueryOptions(Number(workspaceId!)));
   const { data: workspaceColumns, isFetching: isFetchingWorkspaceColumns } =
     useQuery(workspaceColumnsQueryOptions(Number(workspaceId!)));
+  const [selectedWorkspaceColumn, setSelectedWorkspaceColumn] =
+    useState<WorkspaceColumnResponse>({} as WorkspaceColumnResponse);
 
   const openAddWorkspaceColumnModal = () => {
     const modal = document.getElementById(
       ADD_WORKSPACE_COLUMN_MODAL_ID,
+    ) as HTMLDialogElement;
+    modal.showModal();
+  };
+
+  const openEditWorkspaceColumnModal = (
+    workspaceColumn: WorkspaceColumnResponse,
+  ) => {
+    setSelectedWorkspaceColumn(workspaceColumn);
+    const modal = document.getElementById(
+      EDIT_WORKSPACE_COLUMN_MODAL_ID,
     ) as HTMLDialogElement;
     modal.showModal();
   };
@@ -88,6 +104,7 @@ export function Component() {
             workspaceId={Number(workspaceId!)}
             workspaceColumns={workspaceColumns!}
             openAddWorkspaceColumnModal={openAddWorkspaceColumnModal}
+            openEditWorkspaceColumnModal={openEditWorkspaceColumnModal}
           />
         )}
       </div>
@@ -97,6 +114,10 @@ export function Component() {
           ? workspaceColumns.length
           : 0
         ).toString()}
+      />
+      <WorkspaceColumnEditModal
+        workspaceId={workspaceId!}
+        workspaceColumn={selectedWorkspaceColumn}
       />
       <WorkspaceEditModal workspaceId={workspaceId!} />
       <MemberAddModal workspaceId={workspaceId!} />

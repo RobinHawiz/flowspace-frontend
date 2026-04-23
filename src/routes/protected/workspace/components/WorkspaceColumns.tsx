@@ -19,11 +19,15 @@ function Sortable({
   index,
   column,
   isPending,
+  openEditWorkspaceColumnModal,
 }: {
   id: number;
   index: number;
   column: WorkspaceColumnResponse;
   isPending: boolean;
+  openEditWorkspaceColumnModal: (
+    workspaceColumn: WorkspaceColumnResponse,
+  ) => void;
 }) {
   const handleRef = useRef<HTMLHeadingElement | null>(null);
   const { ref } = useSortable({
@@ -40,6 +44,7 @@ function Sortable({
           handleRef={handleRef}
           workspaceColumn={column}
           isDraggingDisabled={isPending}
+          openEditWorkspaceColumnModal={openEditWorkspaceColumnModal}
         />
       </li>
     </>
@@ -50,12 +55,16 @@ type Props = {
   workspaceId: number;
   workspaceColumns: Array<WorkspaceColumnResponse>;
   openAddWorkspaceColumnModal: () => void;
+  openEditWorkspaceColumnModal: (
+    workspaceColumn: WorkspaceColumnResponse,
+  ) => void;
 };
 
 function WorkspaceColumns({
   workspaceId,
   workspaceColumns,
   openAddWorkspaceColumnModal,
+  openEditWorkspaceColumnModal,
 }: Props) {
   const { mutateAsync: workspaceColumnOrderUpdate, isPending } = useMutation(
     workspaceColumnOrderUpdateMutationOptions(),
@@ -117,6 +126,7 @@ function WorkspaceColumns({
                 index={index}
                 column={column}
                 isPending={isPending}
+                openEditWorkspaceColumnModal={openEditWorkspaceColumnModal}
               />
             );
           })}

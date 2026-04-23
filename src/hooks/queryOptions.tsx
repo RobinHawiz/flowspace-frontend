@@ -24,11 +24,13 @@ import {
   addWorkspaceColumn,
   getWorkspaceColumns,
   updateWorkspaceColumnOrder,
+  updateWorkspaceColumnTitle,
 } from "@api/workspaceColumn";
 import type {
   WorkspaceColumnCreation,
   WorkspaceColumnOrderUpdate,
   WorkspaceColumnResponse,
+  WorkspaceColumnTitleUpdate,
 } from "@customTypes/workspaceColumn";
 
 export function appUserRegisterMutationOptions() {
@@ -201,6 +203,27 @@ export function workspaceColumnOrderUpdateMutationOptions() {
       context.client.setQueryData(
         ["workspaces", "columns", payload.workspaceId],
         onMutateResult?.previousColumns,
+      );
+    },
+  });
+}
+
+export function workspaceColumnUpdateTitleMutationOptions() {
+  return mutationOptions({
+    mutationFn: (payload: WorkspaceColumnTitleUpdate) =>
+      updateWorkspaceColumnTitle(payload),
+    onSuccess: (_data, payload) => {
+      queryClient.setQueryData<Array<WorkspaceColumnResponse>>(
+        ["workspaces", "columns", payload.workspaceId],
+        (oldData) => {
+          return oldData
+            ? oldData.map((w) =>
+                w.id === payload.workspaceColumnId
+                  ? { ...w, title: payload.title }
+                  : w,
+              )
+            : oldData;
+        },
       );
     },
   });
