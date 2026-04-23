@@ -2,6 +2,7 @@ import request from "@api/request";
 import {
   workspaceColumnResponseSchema,
   type WorkspaceColumnCreation,
+  type WorkspaceColumnDeletion,
   type WorkspaceColumnOrderUpdate,
   type WorkspaceColumnTitleUpdate,
 } from "@customTypes/workspaceColumn";
@@ -61,6 +62,19 @@ export async function updateWorkspaceColumnTitle(
   await delay(700);
   await request(
     `/workspaces/${payload.workspaceId}/workspace-columns/${payload.workspaceColumnId}/title`,
+    options,
+  );
+}
+
+export async function deleteWorkspaceColumn(payload: WorkspaceColumnDeletion) {
+  const options = {
+    method: "DELETE" as const,
+    credentials: "include" as const,
+  };
+  // Simulate network delay
+  await delay(700);
+  await request(
+    `/workspaces/${payload.workspaceId}/workspace-columns/${payload.workspaceColumnId}`,
     options,
   );
 }

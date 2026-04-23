@@ -22,12 +22,14 @@ import type {
 } from "@customTypes/workspace";
 import {
   addWorkspaceColumn,
+  deleteWorkspaceColumn,
   getWorkspaceColumns,
   updateWorkspaceColumnOrder,
   updateWorkspaceColumnTitle,
 } from "@api/workspaceColumn";
 import type {
   WorkspaceColumnCreation,
+  WorkspaceColumnDeletion,
   WorkspaceColumnOrderUpdate,
   WorkspaceColumnResponse,
   WorkspaceColumnTitleUpdate,
@@ -223,6 +225,24 @@ export function workspaceColumnUpdateTitleMutationOptions() {
                   : w,
               )
             : oldData;
+        },
+      );
+    },
+  });
+}
+
+export function workspaceColumnDeleteMutationOptions() {
+  return mutationOptions({
+    mutationFn: (payload: WorkspaceColumnDeletion) =>
+      deleteWorkspaceColumn(payload),
+    onSuccess: (_data, payload) => {
+      queryClient.setQueryData<Array<WorkspaceColumnResponse>>(
+        ["workspaces", "columns", payload.workspaceId],
+        (oldData) => {
+          if (!oldData) return oldData;
+          return oldData
+            .filter((w) => w.id !== payload.workspaceColumnId) // Remove the deleted column
+            .map((w, index) => ({ ...w, workspaceColumnOrder: index })); // Reorder remaining columns
         },
       );
     },

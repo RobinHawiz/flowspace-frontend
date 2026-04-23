@@ -48,3 +48,12 @@ export const WorkspaceColumnTitleUpdateSchema = z.object({
     .min(1, "Column title cannot be empty")
     .max(200, "Column title cannot exceed 200 characters."),
 });
+
+export type WorkspaceColumnDeletion = z.infer<
+  typeof WorkspaceColumnDeletionSchema
+>;
+
+export const WorkspaceColumnDeletionSchema = z.object({
+  workspaceId: z.number(),
+  workspaceColumnId: z.number(),
+});
