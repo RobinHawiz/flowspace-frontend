@@ -1,5 +1,8 @@
 import request from "@api/request";
-import { workspaceColumnResponseSchema } from "@customTypes/workspaceColumn";
+import {
+  workspaceColumnResponseSchema,
+  type WorkspaceColumnOrderUpdate,
+} from "@customTypes/workspaceColumn";
 import delay from "@utils/delay";
 
 export async function getWorkspaceColumns(workspaceId: number) {
@@ -17,4 +20,24 @@ export async function getWorkspaceColumns(workspaceId: number) {
     workspaceColumnResponseSchema.parse(column),
   );
   return columns;
+}
+
+export async function updateWorkspaceColumnOrder(
+  payload: WorkspaceColumnOrderUpdate,
+) {
+  const options = {
+    method: "PATCH" as const,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      workspaceColumnOrder: payload.workspaceColumnOrderNew,
+    }),
+    credentials: "include" as const,
+  };
+
+  await request(
+    `/workspaces/${payload.workspaceId}/workspace-columns/${payload.workspaceColumnId}/order`,
+    options,
+  );
 }

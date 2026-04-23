@@ -10,3 +10,15 @@ export const workspaceColumnResponseSchema = z.object({
   title: z.string(),
   workspaceColumnOrder: z.number(),
 });
+
+// Payload for workspace column order update.
+export type WorkspaceColumnOrderUpdate = z.infer<
+  typeof workspaceColumnOrderUpdateSchema
+>;
+
+export const workspaceColumnOrderUpdateSchema = z.object({
+  workspaceId: z.number(),
+  workspaceColumnId: z.number(),
+  workspaceColumnOrderNew: z.number(),
+  workspaceColumnOrderCurrent: z.number(),
+});

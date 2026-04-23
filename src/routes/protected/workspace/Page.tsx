@@ -75,7 +75,10 @@ export function Component() {
             <div className="skeleton h-64 w-64 shadow-md"></div>
           </div>
         ) : (
-          <WorkspaceColumns workspaceColumns={workspaceColumns!} />
+          <WorkspaceColumns
+            workspaceId={Number(workspaceId!)}
+            workspaceColumns={workspaceColumns!}
+          />
         )}
       </div>
       <WorkspaceEditModal workspaceId={workspaceId!} />

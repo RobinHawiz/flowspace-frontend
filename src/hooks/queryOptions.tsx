@@ -20,7 +20,14 @@ import type {
   WorkspaceResponse,
   WorkspaceUpdate,
 } from "@customTypes/workspace";
-import { getWorkspaceColumns } from "@api/workspaceColumn";
+import {
+  getWorkspaceColumns,
+  updateWorkspaceColumnOrder,
+} from "@api/workspaceColumn";
+import type {
+  WorkspaceColumnOrderUpdate,
+  WorkspaceColumnResponse,
+} from "@customTypes/workspaceColumn";
 
 export function appUserRegisterMutationOptions() {
   return mutationOptions({
@@ -107,6 +114,91 @@ export function workspaceMembersRemoveMutationOptions() {
           if (!oldData) return oldData;
           return oldData.filter((m) => m.id !== payload.appUserId);
         },
+      );
+    },
+  });
+}
+
+export function workspaceColumnOrderUpdateMutationOptions() {
+  return mutationOptions({
+    mutationFn: (payload: WorkspaceColumnOrderUpdate) =>
+      updateWorkspaceColumnOrder(payload),
+    onMutate: (payload, context) => {
+      const previousColumns = context.client.getQueryData<
+        Array<WorkspaceColumnResponse>
+      >(["workspaces", "columns", payload.workspaceId]);
+
+      context.client.setQueryData<Array<WorkspaceColumnResponse>>(
+        ["workspaces", "columns", payload.workspaceId],
+        (oldData) => {
+          const columnOrderDifference =
+            payload.workspaceColumnOrderNew -
+            payload.workspaceColumnOrderCurrent;
+          if (columnOrderDifference === 0) return oldData; // No change in order, no need to update.
+          if (columnOrderDifference > 0) {
+            // If the column was moved to the right, we need to decrement the order of the subsequent columns that were between the old and new position.
+            return oldData
+              ? oldData
+                  .map((wc) => {
+                    if (wc.id === payload.workspaceColumnId) {
+                      return {
+                        ...wc,
+                        workspaceColumnOrder: payload.workspaceColumnOrderNew,
+                      };
+                    }
+                    if (
+                      wc.workspaceColumnOrder >
+                        payload.workspaceColumnOrderCurrent &&
+                      wc.workspaceColumnOrder <= payload.workspaceColumnOrderNew
+                    ) {
+                      return {
+                        ...wc,
+                        workspaceColumnOrder: wc.workspaceColumnOrder - 1,
+                      };
+                    }
+                    return wc;
+                  })
+                  .sort(
+                    (a, b) => a.workspaceColumnOrder - b.workspaceColumnOrder,
+                  )
+              : oldData;
+          } else {
+            // If the column was moved to the left, we need to increment the order of the preceding columns that were between the old and new position.
+            return oldData
+              ? oldData
+                  .map((wc) => {
+                    if (wc.id === payload.workspaceColumnId) {
+                      return {
+                        ...wc,
+                        workspaceColumnOrder: payload.workspaceColumnOrderNew,
+                      };
+                    }
+                    if (
+                      wc.workspaceColumnOrder <
+                        payload.workspaceColumnOrderCurrent &&
+                      wc.workspaceColumnOrder >= payload.workspaceColumnOrderNew
+                    ) {
+                      return {
+                        ...wc,
+                        workspaceColumnOrder: wc.workspaceColumnOrder + 1,
+                      };
+                    }
+                    return wc;
+                  })
+                  .sort(
+                    (a, b) => a.workspaceColumnOrder - b.workspaceColumnOrder,
+                  )
+              : oldData;
+          }
+        },
+      );
+      return { previousColumns };
+    },
+    // If the mutation fails, use the result returned from onMutate to roll back
+    onError: (_err, payload, onMutateResult, context) => {
+      context.client.setQueryData(
+        ["workspaces", "columns", payload.workspaceId],
+        onMutateResult?.previousColumns,
       );
     },
   });
