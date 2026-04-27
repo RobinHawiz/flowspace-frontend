@@ -21,7 +21,7 @@ function Task({ task, isDraggingDisabled, ref }: Props) {
               : ""
       } bg-white p-2.5 shadow-sm ${isDraggingDisabled ? "cursor-auto" : "cursor-grab"}`}
     >
-      {task.title}
+      <p className="select-none">{task.title}</p>
     </li>
   );
 }
