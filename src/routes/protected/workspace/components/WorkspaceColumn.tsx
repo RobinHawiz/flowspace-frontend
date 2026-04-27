@@ -57,7 +57,7 @@ function WorkspaceColumn({
   const handleExpiredSession = useHandleExpiredSession();
 
   return (
-    <div className="border-accent w-full max-w-70 rounded-lg border border-solid bg-white/28 p-2.5 shadow-md backdrop-blur-sm">
+    <div className="border-accent max-w-70 min-w-70 rounded-lg border border-solid bg-white/28 p-2.5 shadow-md backdrop-blur-sm">
       <div className="mb-3 flex items-center gap-2">
         <h2
           ref={(node) => {
