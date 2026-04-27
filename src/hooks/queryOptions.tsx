@@ -100,7 +100,7 @@ export function workspaceMembersAddMutationOptions() {
     mutationFn: (payload: WorkspaceMembersAdd) => addWorkspaceMember(payload),
     onSuccess: (workspaceMember, payload) => {
       queryClient.setQueryData<Array<WorkspaceMembersResponse>>(
-        ["workspaces", "members", payload.workspaceId],
+        ["members", payload.workspaceId],
         (oldData) => {
           return oldData ? [...oldData, workspaceMember] : [workspaceMember];
         },
@@ -115,7 +115,7 @@ export function workspaceMembersRemoveMutationOptions() {
       removeWorkspaceMember(payload),
     onSuccess: (_data, payload) => {
       queryClient.setQueryData<Array<WorkspaceMembersResponse>>(
-        ["workspaces", "members", payload.workspaceId],
+        ["members", payload.workspaceId],
         (oldData) => {
           if (!oldData) return oldData;
           return oldData.filter((m) => m.id !== payload.appUserId);
@@ -132,10 +132,10 @@ export function workspaceColumnOrderUpdateMutationOptions() {
     onMutate: (payload, context) => {
       const previousColumns = context.client.getQueryData<
         Array<WorkspaceColumnResponse>
-      >(["workspaces", "columns", payload.workspaceId]);
+      >(["columns", payload.workspaceId]);
 
       context.client.setQueryData<Array<WorkspaceColumnResponse>>(
-        ["workspaces", "columns", payload.workspaceId],
+        ["columns", payload.workspaceId],
         (oldData) => {
           const columnOrderDifference =
             payload.workspaceColumnOrderNew -
@@ -203,7 +203,7 @@ export function workspaceColumnOrderUpdateMutationOptions() {
     // If the mutation fails, use the result returned from onMutate to roll back
     onError: (_err, payload, onMutateResult, context) => {
       context.client.setQueryData(
-        ["workspaces", "columns", payload.workspaceId],
+        ["columns", payload.workspaceId],
         onMutateResult?.previousColumns,
       );
     },
@@ -216,7 +216,7 @@ export function workspaceColumnUpdateTitleMutationOptions() {
       updateWorkspaceColumnTitle(payload),
     onSuccess: (_data, payload) => {
       queryClient.setQueryData<Array<WorkspaceColumnResponse>>(
-        ["workspaces", "columns", payload.workspaceId],
+        ["columns", payload.workspaceId],
         (oldData) => {
           return oldData
             ? oldData.map((w) =>
@@ -237,7 +237,7 @@ export function workspaceColumnDeleteMutationOptions() {
       deleteWorkspaceColumn(payload),
     onSuccess: (_data, payload) => {
       queryClient.setQueryData<Array<WorkspaceColumnResponse>>(
-        ["workspaces", "columns", payload.workspaceId],
+        ["columns", payload.workspaceId],
         (oldData) => {
           if (!oldData) return oldData;
           return oldData
@@ -255,7 +255,7 @@ export function workspaceColumnAddMutationOptions() {
       addWorkspaceColumn(payload),
     onSuccess: (workspaceColumn, payload) => {
       queryClient.setQueryData<Array<WorkspaceColumnResponse>>(
-        ["workspaces", "columns", payload.workspaceId],
+        ["columns", payload.workspaceId],
         (oldData) => {
           return oldData ? [...oldData, workspaceColumn] : [workspaceColumn];
         },
@@ -290,7 +290,7 @@ export function workspaceQueryOptions(workspaceId: number) {
 
 export function workspaceMembersQueryOptions(workspaceId: number) {
   return queryOptions({
-    queryKey: ["workspaces", "members", workspaceId],
+    queryKey: ["members", workspaceId],
     queryFn: () => getWorkspaceMembers(workspaceId),
     throwOnError: true,
   });
@@ -298,7 +298,7 @@ export function workspaceMembersQueryOptions(workspaceId: number) {
 
 export function workspaceColumnsQueryOptions(workspaceId: number) {
   return queryOptions({
-    queryKey: ["workspaces", "columns", workspaceId],
+    queryKey: ["columns", workspaceId],
     queryFn: () => getWorkspaceColumns(workspaceId),
     throwOnError: true,
   });
