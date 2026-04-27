@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import WorkspaceEditModal from "@protectedRoutes/workspace/components/WorkspaceEditModal";
 import DrawerMenu from "@components/DrawerMenu";
 import {
+  tasksQueryOptions,
   workspaceColumnsQueryOptions,
   workspaceMembersQueryOptions,
   workspaceQueryOptions,
@@ -46,6 +47,10 @@ export function Component() {
     useQuery(workspaceMembersQueryOptions(Number(workspaceId!)));
   const { data: workspaceColumns, isFetching: isFetchingWorkspaceColumns } =
     useQuery(workspaceColumnsQueryOptions(Number(workspaceId!)));
+  const { data: tasks, isFetching: isFetchingTasks } = useQuery(
+    tasksQueryOptions(Number(workspaceId!)),
+  );
+
   const [selectedWorkspaceColumn, setSelectedWorkspaceColumn] =
     useState<WorkspaceColumnResponse>({} as WorkspaceColumnResponse);
 
@@ -87,7 +92,8 @@ export function Component() {
       isLoading={
         isFetchingWorkspace ||
         isFetchingWorkspaceMembers ||
-        isFetchingWorkspaceColumns
+        isFetchingWorkspaceColumns ||
+        isFetchingTasks
       }
       openEditWorkspaceModal={openEditWorkspaceModal}
       openAddWorkspaceMembersModal={openAddWorkspaceMembersModal}
@@ -95,7 +101,8 @@ export function Component() {
       <div className="bg-gradient min-h-[90svh] overflow-scroll">
         {isFetchingWorkspace ||
         isFetchingWorkspaceMembers ||
-        isFetchingWorkspaceColumns ? (
+        isFetchingWorkspaceColumns ||
+        isFetchingTasks ? (
           <div className="mx-auto flex w-[90%] min-w-70 pt-4">
             <div className="skeleton h-64 w-64 shadow-md"></div>
           </div>
@@ -103,6 +110,7 @@ export function Component() {
           <WorkspaceColumns
             workspaceId={Number(workspaceId!)}
             workspaceColumns={workspaceColumns!}
+            tasks={tasks!}
             openAddWorkspaceColumnModal={openAddWorkspaceColumnModal}
             openEditWorkspaceColumnModal={openEditWorkspaceColumnModal}
           />

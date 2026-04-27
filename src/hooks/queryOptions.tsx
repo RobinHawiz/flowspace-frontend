@@ -34,6 +34,8 @@ import type {
   WorkspaceColumnResponse,
   WorkspaceColumnTitleUpdate,
 } from "@customTypes/workspaceColumn";
+import { getTasks, updateTaskOrder } from "@api/task";
+import type { TaskOrderUpdate, TaskResponse } from "@customTypes/task";
 
 export function appUserRegisterMutationOptions() {
   return mutationOptions({
@@ -264,6 +266,86 @@ export function workspaceColumnAddMutationOptions() {
   });
 }
 
+export function taskOrderUpdateMutationOptions() {
+  return mutationOptions({
+    mutationFn: (payload: TaskOrderUpdate) => updateTaskOrder(payload),
+    onMutate: (payload, context) => {
+      const previousTasks = context.client.getQueryData<Array<TaskResponse>>([
+        "tasks",
+        payload.workspaceId,
+      ]);
+
+      context.client.setQueryData<Array<TaskResponse>>(
+        ["tasks", payload.workspaceId],
+        (oldData) => {
+          const taskOrderDifference =
+            payload.newTaskOrder - payload.currentTaskOrder;
+          if (taskOrderDifference === 0) return oldData; // No change in order, no need to update.
+          if (taskOrderDifference > 0) {
+            // If the task was moved to a higher order, we need to decrement the order of the subsequent tasks that were between the old and new position.
+            return oldData
+              ? oldData
+                  .map((task) => {
+                    if (task.id === payload.taskId) {
+                      return {
+                        ...task,
+                        taskOrder: payload.newTaskOrder,
+                      };
+                    }
+                    if (
+                      task.taskOrder > payload.currentTaskOrder &&
+                      task.taskOrder <= payload.newTaskOrder &&
+                      task.workspaceColumnId === payload.workspaceColumnId
+                    ) {
+                      return {
+                        ...task,
+                        taskOrder: task.taskOrder - 1,
+                      };
+                    }
+                    return task;
+                  })
+                  .sort((a, b) => a.taskOrder - b.taskOrder)
+              : oldData;
+          } else {
+            // If the task was moved to a lower order, we need to increment the order of the preceding tasks that were between the old and new position.
+            return oldData
+              ? oldData
+                  .map((task) => {
+                    if (task.id === payload.taskId) {
+                      return {
+                        ...task,
+                        taskOrder: payload.newTaskOrder,
+                      };
+                    }
+                    if (
+                      task.taskOrder < payload.currentTaskOrder &&
+                      task.taskOrder >= payload.newTaskOrder &&
+                      task.workspaceColumnId === payload.workspaceColumnId
+                    ) {
+                      return {
+                        ...task,
+                        taskOrder: task.taskOrder + 1,
+                      };
+                    }
+                    return task;
+                  })
+                  .sort((a, b) => a.taskOrder - b.taskOrder)
+              : oldData;
+          }
+        },
+      );
+      return { previousTasks };
+    },
+    // If the mutation fails, use the result returned from onMutate to roll back
+    onError: (_err, payload, onMutateResult, context) => {
+      context.client.setQueryData(
+        ["tasks", payload.workspaceId],
+        onMutateResult?.previousTasks,
+      );
+    },
+  });
+}
+
 export function appUserQueryOptions() {
   return queryOptions({
     queryKey: ["currentAppUser"],
@@ -300,6 +382,14 @@ export function workspaceColumnsQueryOptions(workspaceId: number) {
   return queryOptions({
     queryKey: ["columns", workspaceId],
     queryFn: () => getWorkspaceColumns(workspaceId),
+    throwOnError: true,
+  });
+}
+
+export function tasksQueryOptions(workspaceId: number) {
+  return queryOptions({
+    queryKey: ["tasks", workspaceId],
+    queryFn: () => getTasks(workspaceId),
     throwOnError: true,
   });
 }

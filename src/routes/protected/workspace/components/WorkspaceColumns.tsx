@@ -13,17 +13,22 @@ import { toast } from "react-toastify";
 import getUnexpectedFormErrorMessage from "@utils/getUnexpectedFormErrorMessage";
 import useHandleExpiredSession from "@hooks/useHandleExpiredSession";
 import addColumn from "@images/add-column.svg";
+import type { TaskResponse } from "@customTypes/task";
 
 function Sortable({
   id,
   index,
+  workspaceId,
   column,
+  tasks,
   isPending,
   openEditWorkspaceColumnModal,
 }: {
   id: number;
   index: number;
+  workspaceId: number;
   column: WorkspaceColumnResponse;
+  tasks: Array<TaskResponse>;
   isPending: boolean;
   openEditWorkspaceColumnModal: (
     workspaceColumn: WorkspaceColumnResponse,
@@ -41,8 +46,10 @@ function Sortable({
     <>
       <li ref={ref} className="relative">
         <WorkspaceColumn
+          workspaceId={workspaceId}
           handleRef={handleRef}
           workspaceColumn={column}
+          tasks={tasks}
           isDraggingDisabled={isPending}
           openEditWorkspaceColumnModal={openEditWorkspaceColumnModal}
         />
@@ -54,6 +61,7 @@ function Sortable({
 type Props = {
   workspaceId: number;
   workspaceColumns: Array<WorkspaceColumnResponse>;
+  tasks: Array<TaskResponse>;
   openAddWorkspaceColumnModal: () => void;
   openEditWorkspaceColumnModal: (
     workspaceColumn: WorkspaceColumnResponse,
@@ -63,6 +71,7 @@ type Props = {
 function WorkspaceColumns({
   workspaceId,
   workspaceColumns,
+  tasks,
   openAddWorkspaceColumnModal,
   openEditWorkspaceColumnModal,
 }: Props) {
@@ -119,12 +128,17 @@ function WorkspaceColumns({
           }}
         >
           {workspaceColumns.map((column, index) => {
+            const columnTasks = tasks.filter(
+              (task) => task.workspaceColumnId === column.id,
+            );
             return (
               <Sortable
                 key={column.id}
                 id={column.id}
                 index={index}
+                workspaceId={workspaceId}
                 column={column}
+                tasks={columnTasks}
                 isPending={isPending}
                 openEditWorkspaceColumnModal={openEditWorkspaceColumnModal}
               />
