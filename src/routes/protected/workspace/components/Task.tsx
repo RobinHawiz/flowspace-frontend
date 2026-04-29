@@ -1,12 +1,24 @@
 import type { TaskResponse } from "@customTypes/task";
+import { useSortable } from "@dnd-kit/react/sortable";
 
 type Props = {
+  index: number;
   task: TaskResponse;
-  isDraggingDisabled: boolean;
-  ref: (element: Element | null) => void;
+  workspaceColumnId: number;
+  isDisabled: boolean;
 };
 
-function Task({ task, isDraggingDisabled, ref }: Props) {
+function Task({ task, index, workspaceColumnId, isDisabled }: Props) {
+  const { ref } = useSortable({
+    id: task.id,
+    index,
+    type: "task",
+    accept: ["task"],
+    group: workspaceColumnId,
+    data: task,
+    disabled: isDisabled,
+  });
+
   return (
     <li
       ref={ref}
@@ -19,7 +31,7 @@ function Task({ task, isDraggingDisabled, ref }: Props) {
             : task.priority === "low"
               ? "border-green-500"
               : ""
-      } bg-white p-2.5 shadow-sm ${isDraggingDisabled ? "cursor-auto" : "cursor-grab"}`}
+      } cursor-grab bg-white p-2.5 shadow-sm`}
     >
       <p className="select-none">{task.title}</p>
     </li>

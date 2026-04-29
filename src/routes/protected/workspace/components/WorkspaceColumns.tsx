@@ -1,62 +1,19 @@
-import { useRef } from "react";
-import { useMutation } from "@tanstack/react-query";
 import { DragDropProvider } from "@dnd-kit/react";
-import { isSortable, useSortable } from "@dnd-kit/react/sortable";
-import type {
-  WorkspaceColumnOrderUpdate,
-  WorkspaceColumnResponse,
-} from "@customTypes/workspaceColumn";
-import WorkspaceColumn from "@protectedRoutes/workspace/components/WorkspaceColumn";
-import { workspaceColumnOrderUpdateMutationOptions } from "@hooks/queryOptions";
-import { AppError } from "@customTypes/appError";
+import { useMutation } from "@tanstack/react-query";
+import { isSortable } from "@dnd-kit/react/sortable";
 import { toast } from "react-toastify";
-import getUnexpectedFormErrorMessage from "@utils/getUnexpectedFormErrorMessage";
-import useHandleExpiredSession from "@hooks/useHandleExpiredSession";
-import addColumn from "@images/add-column.svg";
+import { AppError } from "@customTypes/appError";
+import WorkspaceColumn from "@protectedRoutes/workspace/components/WorkspaceColumn";
+import Task from "@protectedRoutes/workspace/components/Task";
+import {
+  taskOrderUpdateMutationOptions,
+  workspaceColumnOrderUpdateMutationOptions,
+} from "@hooks/queryOptions";
 import type { TaskResponse } from "@customTypes/task";
-
-function Sortable({
-  id,
-  index,
-  workspaceId,
-  column,
-  tasks,
-  isPending,
-  openEditWorkspaceColumnModal,
-}: {
-  id: number;
-  index: number;
-  workspaceId: number;
-  column: WorkspaceColumnResponse;
-  tasks: Array<TaskResponse>;
-  isPending: boolean;
-  openEditWorkspaceColumnModal: (
-    workspaceColumn: WorkspaceColumnResponse,
-  ) => void;
-}) {
-  const handleRef = useRef<HTMLHeadingElement | null>(null);
-  const { ref } = useSortable({
-    id,
-    index,
-    handle: handleRef,
-    disabled: isPending,
-  });
-
-  return (
-    <>
-      <li ref={ref} className="relative">
-        <WorkspaceColumn
-          workspaceId={workspaceId}
-          handleRef={handleRef}
-          workspaceColumn={column}
-          tasks={tasks}
-          isDraggingDisabled={isPending}
-          openEditWorkspaceColumnModal={openEditWorkspaceColumnModal}
-        />
-      </li>
-    </>
-  );
-}
+import type { WorkspaceColumnResponse } from "@customTypes/workspaceColumn";
+import addColumn from "@images/add-column.svg";
+import useHandleExpiredSession from "@hooks/useHandleExpiredSession";
+import getUnexpectedFormErrorMessage from "@utils/getUnexpectedFormErrorMessage";
 
 type Props = {
   workspaceId: number;
@@ -75,54 +32,126 @@ function WorkspaceColumns({
   openAddWorkspaceColumnModal,
   openEditWorkspaceColumnModal,
 }: Props) {
-  const { mutateAsync: workspaceColumnOrderUpdate, isPending } = useMutation(
-    workspaceColumnOrderUpdateMutationOptions(),
-  );
+  const {
+    mutateAsync: updateWorkspaceColumnOrder,
+    isPending: isUpdatingWorkspaceColumnOrder,
+  } = useMutation(workspaceColumnOrderUpdateMutationOptions());
+  const { mutateAsync: updateTaskOrder, isPending: isUpdatingTaskOrder } =
+    useMutation(taskOrderUpdateMutationOptions());
   const handleExpiredSession = useHandleExpiredSession();
+
+  const handleTaskOrderError = async (err: unknown) => {
+    if (err instanceof AppError) {
+      switch (err.statusCode) {
+        case 401:
+          await handleExpiredSession();
+          break;
+        case 403:
+          toast.error(
+            "You don't have permission to change the task order in this workspace.",
+          );
+          break;
+        case 400:
+          toast.error(
+            "Something went wrong while changing the task order. Please try again.",
+          );
+          break;
+        default:
+          toast.error("An unexpected error occurred. Please try again.");
+      }
+      console.error(err.message);
+    } else {
+      const errorMessage = getUnexpectedFormErrorMessage(err);
+      toast.error(errorMessage);
+    }
+  };
+
+  const handleWorkspaceColumnOrderError = async (err: unknown) => {
+    if (err instanceof AppError) {
+      switch (err.statusCode) {
+        case 401:
+          await handleExpiredSession();
+          break;
+        case 403:
+          toast.error(
+            "You don't have permission to change the column order in this workspace.",
+          );
+          break;
+        case 400:
+          toast.error(
+            "Something went wrong while changing the column order. Please try again.",
+          );
+          break;
+        default:
+          toast.error("An unexpected error occurred. Please try again.");
+      }
+      console.error(err.message);
+    } else {
+      const errorMessage = getUnexpectedFormErrorMessage(err);
+      toast.error(errorMessage);
+    }
+  };
 
   return (
     <div className="xs:px-25 flex w-max gap-7.5 px-7.5 pt-4">
       <ul className="flex gap-7.5">
         <DragDropProvider
           onDragEnd={async (event) => {
-            const { source } = event.operation;
+            const { source, target } = event.operation;
+            if (!source || !target) return;
             if (isSortable(source)) {
-              const { initialIndex, index } = source;
-              if (initialIndex === index) return; // No change in order, so we can skip the update
-              const payload: WorkspaceColumnOrderUpdate = {
-                workspaceId,
-                workspaceColumnId: Number(source.id),
-                workspaceColumnOrderNew: index,
-                workspaceColumnOrderCurrent: initialIndex,
-              };
-              try {
-                await workspaceColumnOrderUpdate(payload);
-              } catch (err) {
-                if (err instanceof AppError) {
-                  switch (err.statusCode) {
-                    case 401:
-                      await handleExpiredSession();
-                      break;
-                    case 403:
-                      toast.error(
-                        "You don't have permission to change the column order in this workspace.",
-                      );
-                      break;
-                    case 400:
-                      toast.error(
-                        "Something went wrong while changing the column order. Please try again.",
-                      );
-                      break;
-                    default:
-                      toast.error(
-                        "An unexpected error occurred. Please try again.",
-                      );
+              if (isSortable(target)) {
+                // Task was dragged within the same column or to another column (Sortable)
+                if (source.type === "task" && target.type === "task") {
+                  // Task was dragged to a different column (Sortable)
+                  if (source.group !== target.group) {
+                    // TODO: Handle task being dragged to a different column (Sortable)
+                    return;
                   }
-                  console.error(err.message);
-                } else {
-                  const errorMessage = getUnexpectedFormErrorMessage(err);
-                  toast.error(errorMessage);
+                  // Task was dragged within the same column (Sortable)
+                  else {
+                    const {
+                      id: taskId,
+                      workspaceColumnId,
+                      taskOrder: currentTaskOrder,
+                    } = source.data as TaskResponse;
+                    const newTaskOrder = source.index;
+                    try {
+                      await updateTaskOrder({
+                        workspaceId,
+                        workspaceColumnId,
+                        taskId,
+                        currentTaskOrder,
+                        newTaskOrder,
+                      });
+                    } catch (err) {
+                      await handleTaskOrderError(err);
+                    }
+                  }
                 }
+                // Column was dragged to a different position (Sortable)
+                else {
+                  const {
+                    id: workspaceColumnId,
+                    workspaceColumnOrder: workspaceColumnOrderCurrent,
+                  } = source.data as WorkspaceColumnResponse;
+                  const workspaceColumnOrderNew = source.index;
+                  try {
+                    await updateWorkspaceColumnOrder({
+                      workspaceId,
+                      workspaceColumnId,
+                      workspaceColumnOrderCurrent,
+                      workspaceColumnOrderNew,
+                    });
+                  } catch (err) {
+                    await handleWorkspaceColumnOrderError(err);
+                  }
+                }
+              }
+              // Task was dragged to an empty column (Droppable)
+              else {
+                // TODO: Handle task being dragged to an empty column (Droppable)
+                return;
               }
             }
           }}
@@ -132,16 +161,24 @@ function WorkspaceColumns({
               (task) => task.workspaceColumnId === column.id,
             );
             return (
-              <Sortable
+              <WorkspaceColumn
                 key={column.id}
-                id={column.id}
                 index={index}
-                workspaceId={workspaceId}
-                column={column}
-                tasks={columnTasks}
-                isPending={isPending}
+                isEmpty={columnTasks.length === 0}
+                isDisabled={isUpdatingWorkspaceColumnOrder}
+                workspaceColumn={column}
                 openEditWorkspaceColumnModal={openEditWorkspaceColumnModal}
-              />
+              >
+                {columnTasks.map((task, index) => (
+                  <Task
+                    key={task.id}
+                    index={index}
+                    task={task}
+                    workspaceColumnId={column.id}
+                    isDisabled={isUpdatingTaskOrder}
+                  />
+                ))}
+              </WorkspaceColumn>
             );
           })}
         </DragDropProvider>
