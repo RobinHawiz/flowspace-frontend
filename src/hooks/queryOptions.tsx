@@ -34,8 +34,16 @@ import type {
   WorkspaceColumnResponse,
   WorkspaceColumnTitleUpdate,
 } from "@customTypes/workspaceColumn";
-import { getTasks, updateTaskOrder } from "@api/task";
-import type { TaskOrderUpdate, TaskResponse } from "@customTypes/task";
+import {
+  getTasks,
+  moveTaskToDifferentColumn,
+  updateTaskOrder,
+} from "@api/task";
+import type {
+  MoveTaskToDifferentColumn,
+  TaskOrderUpdate,
+  TaskResponse,
+} from "@customTypes/task";
 
 export function appUserRegisterMutationOptions() {
   return mutationOptions({
@@ -332,6 +340,62 @@ export function taskOrderUpdateMutationOptions() {
                   .sort((a, b) => a.taskOrder - b.taskOrder)
               : oldData;
           }
+        },
+      );
+      return { previousTasks };
+    },
+    // If the mutation fails, use the result returned from onMutate to roll back
+    onError: (_err, payload, onMutateResult, context) => {
+      context.client.setQueryData(
+        ["tasks", payload.workspaceId],
+        onMutateResult?.previousTasks,
+      );
+    },
+  });
+}
+
+export function moveTaskToDifferentColumnMutationOptions() {
+  return mutationOptions({
+    mutationFn: (payload: MoveTaskToDifferentColumn) =>
+      moveTaskToDifferentColumn(payload),
+    onMutate: (payload, context) => {
+      const previousTasks = context.client.getQueryData<Array<TaskResponse>>([
+        "tasks",
+        payload.workspaceId,
+      ]);
+
+      context.client.setQueryData<Array<TaskResponse>>(
+        ["tasks", payload.workspaceId],
+        (oldData) => {
+          return oldData
+            ? oldData
+                .map((task) => {
+                  // Reindex the tasks in the previous workspace column.
+                  if (
+                    task.workspaceColumnId === payload.prevWorkspaceColumnId &&
+                    task.taskOrder > payload.prevTaskOrder
+                  ) {
+                    return { ...task, taskOrder: task.taskOrder - 1 };
+                  }
+                  // Reindex the tasks in the new workspace column.
+                  else if (
+                    task.workspaceColumnId === payload.newWorkspaceColumnId &&
+                    task.taskOrder >= payload.newTaskOrder
+                  ) {
+                    return { ...task, taskOrder: task.taskOrder + 1 };
+                  }
+                  // Update the moved task with the new workspace column and order.
+                  else if (task.id === payload.taskId) {
+                    return {
+                      ...task,
+                      workspaceColumnId: payload.newWorkspaceColumnId,
+                      taskOrder: payload.newTaskOrder,
+                    };
+                  }
+                  return task;
+                })
+                .sort((a, b) => a.taskOrder - b.taskOrder)
+            : oldData;
         },
       );
       return { previousTasks };

@@ -1,5 +1,9 @@
 import request from "@api/request";
-import { taskResponseSchema, type TaskOrderUpdate } from "@customTypes/task";
+import {
+  taskResponseSchema,
+  type MoveTaskToDifferentColumn,
+  type TaskOrderUpdate,
+} from "@customTypes/task";
 
 export async function getTasks(workspaceId: number) {
   const options = {
@@ -26,4 +30,30 @@ export async function updateTaskOrder(payload: TaskOrderUpdate) {
   };
 
   await request(`/workspaces/${workspaceId}/tasks/${taskId}/order`, options);
+}
+
+export async function moveTaskToDifferentColumn(
+  payload: MoveTaskToDifferentColumn,
+) {
+  const {
+    workspaceId,
+    prevWorkspaceColumnId: workspaceColumnId,
+    taskId,
+    newWorkspaceColumnId,
+    newTaskOrder,
+  } = payload;
+  const options = {
+    method: "PATCH" as const,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      workspaceColumnId,
+      newWorkspaceColumnId,
+      newTaskOrder,
+    }),
+    credentials: "include" as const,
+  };
+
+  await request(`/workspaces/${workspaceId}/tasks/${taskId}/move`, options);
 }

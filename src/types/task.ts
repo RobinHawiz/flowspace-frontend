@@ -23,3 +23,16 @@ export const taskOrderUpdateSchema = z.object({
   currentTaskOrder: z.number(),
   newTaskOrder: z.number(),
 });
+
+export type MoveTaskToDifferentColumn = z.infer<
+  typeof moveTaskToDifferentColumnSchema
+>;
+
+export const moveTaskToDifferentColumnSchema = z.object({
+  workspaceId: z.number(),
+  taskId: z.number(),
+  prevTaskOrder: z.number(),
+  prevWorkspaceColumnId: z.number(),
+  newWorkspaceColumnId: z.number(),
+  newTaskOrder: z.number(),
+});

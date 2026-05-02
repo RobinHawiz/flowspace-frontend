@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { DragDropProvider } from "@dnd-kit/react";
 import { useMutation } from "@tanstack/react-query";
 import { isSortable } from "@dnd-kit/react/sortable";
@@ -6,6 +7,7 @@ import { AppError } from "@customTypes/appError";
 import WorkspaceColumn from "@protectedRoutes/workspace/components/WorkspaceColumn";
 import Task from "@protectedRoutes/workspace/components/Task";
 import {
+  moveTaskToDifferentColumnMutationOptions,
   taskOrderUpdateMutationOptions,
   workspaceColumnOrderUpdateMutationOptions,
 } from "@hooks/queryOptions";
@@ -39,6 +41,26 @@ function WorkspaceColumns({
   const { mutateAsync: updateTaskOrder, isPending: isUpdatingTaskOrder } =
     useMutation(taskOrderUpdateMutationOptions());
   const handleExpiredSession = useHandleExpiredSession();
+  const {
+    mutateAsync: moveTaskToDifferentColumn,
+    isPending: isMovingTaskToDifferentColumn,
+  } = useMutation(moveTaskToDifferentColumnMutationOptions());
+  const [tempBoardState, setTempBoardState] = useState<Record<
+    number,
+    Array<TaskResponse>
+  > | null>(null);
+
+  const baseBoardState = useMemo(() => {
+    const state: Record<number, Array<TaskResponse>> = {};
+    workspaceColumns.forEach((column) => {
+      state[column.id] = tasks.filter(
+        (task) => task.workspaceColumnId === column.id,
+      );
+    });
+    return state;
+  }, [workspaceColumns, tasks]);
+
+  const renderedBoardState = tempBoardState ?? baseBoardState;
 
   const handleTaskOrderError = async (err: unknown) => {
     if (err instanceof AppError) {
@@ -96,6 +118,47 @@ function WorkspaceColumns({
     <div className="xs:px-25 flex w-max gap-7.5 px-7.5 pt-4">
       <ul className="flex gap-7.5">
         <DragDropProvider
+          onDragOver={({ operation }) => {
+            const { source, target } = operation;
+            if (!source || !target) return;
+            if (source.type === "column") return;
+            const currentBoardState = tempBoardState ?? baseBoardState;
+            const nextBoardState = { ...currentBoardState };
+            if (isSortable(source)) {
+              const task = source.data as TaskResponse;
+              const prevWorkspaceColumnId = Number(
+                Object.keys(currentBoardState).find((columnId) => {
+                  return currentBoardState[Number(columnId)].some(
+                    (t) => t.id === task.id,
+                  );
+                })!,
+              );
+              // Remove the task from its previous column position optimistically
+              nextBoardState[prevWorkspaceColumnId] = nextBoardState[
+                prevWorkspaceColumnId
+              ].filter((t) => t.id !== task.id);
+              if (isSortable(target)) {
+                const newWorkspaceColumnId = target.group as number;
+                // Task was dragged over the same column or to another column (Sortable)
+                if (source.type === "task" && target.type === "task") {
+                  // Insert the task into its new column position optimistically
+                  nextBoardState[newWorkspaceColumnId] = nextBoardState[
+                    newWorkspaceColumnId
+                  ].toSpliced(target.index, 0, task);
+                  setTempBoardState(nextBoardState);
+                }
+              }
+              // Task was dragged over an empty column (Droppable)
+              else {
+                const newWorkspaceColumnId = Number(target.id);
+                // Insert the task into its new column position optimistically
+                nextBoardState[newWorkspaceColumnId] = nextBoardState[
+                  newWorkspaceColumnId
+                ].toSpliced(0, 0, task);
+                setTempBoardState(nextBoardState);
+              }
+            }
+          }}
           onDragEnd={async (event) => {
             const { source, target } = event.operation;
             if (!source || !target) return;
@@ -103,10 +166,29 @@ function WorkspaceColumns({
               if (isSortable(target)) {
                 // Task was dragged within the same column or to another column (Sortable)
                 if (source.type === "task" && target.type === "task") {
+                  const { workspaceColumnId } = source.data as TaskResponse;
                   // Task was dragged to a different column (Sortable)
-                  if (source.group !== target.group) {
-                    // TODO: Handle task being dragged to a different column (Sortable)
-                    return;
+                  if (workspaceColumnId !== target.group) {
+                    const {
+                      id: taskId,
+                      taskOrder: prevTaskOrder,
+                      workspaceColumnId: prevWorkspaceColumnId,
+                    } = source.data as TaskResponse;
+                    const newTaskOrder = target.index;
+                    try {
+                      await moveTaskToDifferentColumn({
+                        workspaceId,
+                        taskId,
+                        prevTaskOrder,
+                        prevWorkspaceColumnId,
+                        newWorkspaceColumnId: Number(target.group),
+                        newTaskOrder,
+                      });
+                    } catch (err) {
+                      await handleTaskOrderError(err);
+                    } finally {
+                      setTempBoardState(null);
+                    }
                   }
                   // Task was dragged within the same column (Sortable)
                   else {
@@ -126,6 +208,8 @@ function WorkspaceColumns({
                       });
                     } catch (err) {
                       await handleTaskOrderError(err);
+                    } finally {
+                      setTempBoardState(null);
                     }
                   }
                 }
@@ -145,21 +229,41 @@ function WorkspaceColumns({
                     });
                   } catch (err) {
                     await handleWorkspaceColumnOrderError(err);
+                  } finally {
+                    setTempBoardState(null);
                   }
                 }
               }
               // Task was dragged to an empty column (Droppable)
               else {
-                // TODO: Handle task being dragged to an empty column (Droppable)
-                return;
+                const {
+                  id: taskId,
+                  taskOrder: prevTaskOrder,
+                  workspaceColumnId: prevWorkspaceColumnId,
+                } = source.data as TaskResponse;
+                const newWorkspaceColumnId = Number(target.id);
+                const newTaskOrder = 0;
+
+                try {
+                  await moveTaskToDifferentColumn({
+                    workspaceId,
+                    taskId,
+                    prevTaskOrder,
+                    prevWorkspaceColumnId,
+                    newWorkspaceColumnId,
+                    newTaskOrder,
+                  });
+                } catch (err) {
+                  await handleTaskOrderError(err);
+                } finally {
+                  setTempBoardState(null);
+                }
               }
             }
           }}
         >
           {workspaceColumns.map((column, index) => {
-            const columnTasks = tasks.filter(
-              (task) => task.workspaceColumnId === column.id,
-            );
+            const columnTasks = renderedBoardState[column.id] ?? [];
             return (
               <WorkspaceColumn
                 key={column.id}
@@ -169,15 +273,19 @@ function WorkspaceColumns({
                 workspaceColumn={column}
                 openEditWorkspaceColumnModal={openEditWorkspaceColumnModal}
               >
-                {columnTasks.map((task, index) => (
-                  <Task
-                    key={task.id}
-                    index={index}
-                    task={task}
-                    workspaceColumnId={column.id}
-                    isDisabled={isUpdatingTaskOrder}
-                  />
-                ))}
+                {columnTasks.map((task, index) => {
+                  return (
+                    <Task
+                      key={task.id}
+                      index={index}
+                      task={task}
+                      workspaceColumnId={column.id}
+                      isDisabled={
+                        isUpdatingTaskOrder || isMovingTaskToDifferentColumn
+                      }
+                    />
+                  );
+                })}
               </WorkspaceColumn>
             );
           })}
