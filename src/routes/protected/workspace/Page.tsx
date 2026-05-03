@@ -108,7 +108,7 @@ export function Component() {
       openEditWorkspaceModal={openEditWorkspaceModal}
       openAddWorkspaceMembersModal={openAddWorkspaceMembersModal}
     >
-      <div className="bg-gradient min-h-[90svh] overflow-scroll">
+      <div className="bg-gradient min-h-[90svh]">
         {isFetchingWorkspace ||
         isFetchingWorkspaceMembers ||
         isFetchingWorkspaceColumns ||

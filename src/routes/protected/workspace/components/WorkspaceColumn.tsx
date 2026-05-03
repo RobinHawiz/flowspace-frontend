@@ -45,8 +45,8 @@ function WorkspaceColumn({
 
   return (
     <li ref={ref} className="relative">
-      <div className="border-accent max-w-70 min-w-70 rounded-lg border border-solid bg-white/28 p-2.5 shadow-md backdrop-blur-sm">
-        <div className="mb-3 flex items-center gap-2">
+      <div className="border-accent max-w-70 min-w-70 rounded-lg border border-solid bg-white/28 shadow-md backdrop-blur-sm">
+        <div className="flex items-center gap-2 p-2.5">
           <h2
             ref={(node) => {
               handleRef.current = node;
@@ -62,21 +62,21 @@ function WorkspaceColumn({
             <img src={editColumn} />
           </button>
         </div>
-        <ul
+        <div
           ref={droppableRef}
-          className="relative flex min-h-25 flex-col gap-3"
+          className="max-h-[70svh] min-h-25 overflow-y-auto p-2.5"
         >
-          {children}
-          <li className="mt-auto">
-            <button
-              onClick={() => openAddTaskModal(workspaceColumn)}
-              className="btn focus:outline-accent w-full gap-2.5 rounded-lg border-none bg-pink-200 p-2.5 text-rose-600 hover:bg-pink-300"
-            >
-              <p className="">Add task</p>
-              <img src={addTask} />
-            </button>
-          </li>
-        </ul>
+          <ul className="relative z-10 flex flex-col gap-3">{children}</ul>
+        </div>
+        <div className="p-2.5">
+          <button
+            onClick={() => openAddTaskModal(workspaceColumn)}
+            className="btn focus:outline-accent w-full gap-2.5 rounded-lg border-none bg-pink-200 p-2.5 text-rose-600 hover:bg-pink-300"
+          >
+            <p className="">Add task</p>
+            <img src={addTask} />
+          </button>
+        </div>
       </div>
     </li>
   );

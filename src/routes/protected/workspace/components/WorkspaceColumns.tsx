@@ -117,7 +117,7 @@ function WorkspaceColumns({
   };
 
   return (
-    <div className="xs:px-25 flex w-max gap-7.5 px-7.5 pt-4">
+    <div className="xs:px-25 flex w-max gap-7.5 px-7.5 py-4">
       <ul className="flex gap-7.5">
         <DragDropProvider
           onDragOver={({ operation }) => {
