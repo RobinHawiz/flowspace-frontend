@@ -14,11 +14,13 @@ import WorkspaceColumnAddModal from "@protectedRoutes/workspace/components/Works
 import type { WorkspaceColumnResponse } from "@customTypes/workspaceColumn";
 import { useState } from "react";
 import WorkspaceColumnEditModal from "@protectedRoutes/workspace/components/WorkspaceColumnEditModal";
+import WorkspaceTaskAddModal from "@protectedRoutes/workspace/components/WorkspaceTaskAddModal";
 
 const ADD_WORKSPACE_COLUMN_MODAL_ID = "add_workspace_column_dialog";
 const EDIT_WORKSPACE_COLUMN_MODAL_ID = "edit_workspace_column_dialog";
 const EDIT_WORKSPACE_MODAL_ID = "edit_workspace_dialog";
 const ADD_MEMBER_MODAL_ID = "add_member_dialog";
+const ADD_TASK_MODAL_ID = "add_task_dialog";
 
 export function ErrorBoundary() {
   return (
@@ -71,6 +73,14 @@ export function Component() {
     modal.showModal();
   };
 
+  const openAddTaskModal = (workspaceColumn: WorkspaceColumnResponse) => {
+    setSelectedWorkspaceColumn(workspaceColumn);
+    const modal = document.getElementById(
+      ADD_TASK_MODAL_ID,
+    ) as HTMLDialogElement;
+    modal.showModal();
+  };
+
   const openEditWorkspaceModal = () => {
     const modal = document.getElementById(
       EDIT_WORKSPACE_MODAL_ID,
@@ -112,6 +122,7 @@ export function Component() {
             workspaceColumns={workspaceColumns!}
             tasks={tasks!}
             openAddWorkspaceColumnModal={openAddWorkspaceColumnModal}
+            openAddTaskModal={openAddTaskModal}
             openEditWorkspaceColumnModal={openEditWorkspaceColumnModal}
           />
         )}
@@ -127,6 +138,21 @@ export function Component() {
         workspaceId={workspaceId!}
         workspaceColumn={selectedWorkspaceColumn}
       />
+      {tasks && (
+        <WorkspaceTaskAddModal
+          workspaceId={workspaceId!}
+          workspaceColumnId={selectedWorkspaceColumn.id}
+          taskOrder={tasks!
+            .filter(
+              (task) => task.workspaceColumnId === selectedWorkspaceColumn.id,
+            )
+            .map((task) => {
+              return task.taskOrder + 1; // Add 1 so that the returned order from reduce becomes the new last order in the column
+            })
+            .reduce((prev, current) => (prev > current ? prev : current), 0)}
+        />
+      )}
+
       <WorkspaceEditModal workspaceId={workspaceId!} />
       <MemberAddModal workspaceId={workspaceId!} />
     </DrawerMenu>

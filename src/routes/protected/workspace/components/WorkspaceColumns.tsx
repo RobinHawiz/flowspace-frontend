@@ -25,6 +25,7 @@ type Props = {
   openEditWorkspaceColumnModal: (
     workspaceColumn: WorkspaceColumnResponse,
   ) => void;
+  openAddTaskModal: (workspaceColumn: WorkspaceColumnResponse) => void;
 };
 
 function WorkspaceColumns({
@@ -33,6 +34,7 @@ function WorkspaceColumns({
   tasks,
   openAddWorkspaceColumnModal,
   openEditWorkspaceColumnModal,
+  openAddTaskModal,
 }: Props) {
   const {
     mutateAsync: updateWorkspaceColumnOrder,
@@ -271,6 +273,7 @@ function WorkspaceColumns({
                 isEmpty={columnTasks.length === 0}
                 isDisabled={isUpdatingWorkspaceColumnOrder}
                 workspaceColumn={column}
+                openAddTaskModal={openAddTaskModal}
                 openEditWorkspaceColumnModal={openEditWorkspaceColumnModal}
               >
                 {columnTasks.map((task, index) => {

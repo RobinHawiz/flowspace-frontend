@@ -33,7 +33,7 @@ function Task({ task, index, workspaceColumnId, isDisabled }: Props) {
               : ""
       } cursor-grab bg-white p-2.5 shadow-sm`}
     >
-      <p className="select-none">{task.title}</p>
+      <p className="wrap-break-word select-none">{task.title}</p>
     </li>
   );
 }

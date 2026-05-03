@@ -35,12 +35,14 @@ import type {
   WorkspaceColumnTitleUpdate,
 } from "@customTypes/workspaceColumn";
 import {
+  addTask,
   getTasks,
   moveTaskToDifferentColumn,
   updateTaskOrder,
 } from "@api/task";
 import type {
   MoveTaskToDifferentColumn,
+  TaskCreation,
   TaskOrderUpdate,
   TaskResponse,
 } from "@customTypes/task";
@@ -405,6 +407,20 @@ export function moveTaskToDifferentColumnMutationOptions() {
       context.client.setQueryData(
         ["tasks", payload.workspaceId],
         onMutateResult?.previousTasks,
+      );
+    },
+  });
+}
+
+export function taskAddMutationOptions() {
+  return mutationOptions({
+    mutationFn: (payload: TaskCreation) => addTask(payload),
+    onSuccess: (task, payload) => {
+      queryClient.setQueryData<Array<TaskResponse>>(
+        ["tasks", payload.workspaceId],
+        (oldData) => {
+          return oldData ? [...oldData, task] : [task];
+        },
       );
     },
   });

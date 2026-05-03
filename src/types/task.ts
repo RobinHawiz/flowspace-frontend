@@ -36,3 +36,24 @@ export const moveTaskToDifferentColumnSchema = z.object({
   newWorkspaceColumnId: z.number(),
   newTaskOrder: z.number(),
 });
+
+export type TaskCreation = z.infer<typeof taskCreationSchema>;
+
+export const taskCreationSchema = z.object({
+  workspaceId: z.number(),
+  workspaceColumnId: z.number(),
+  title: z
+    .string()
+    .min(1, "Task title cannot be empty")
+    .max(200, "Task title cannot exceed 200 characters."),
+  description: z.string().nullable(),
+  priority: z.enum(["low", "medium", "high"]),
+  deadline: z
+    .string()
+    .regex(
+      /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/,
+      "Deadline must be in ISO format (e.g. 2023-12-31T23:59:59.000Z)",
+    )
+    .nullable(),
+  taskOrder: z.number(),
+});

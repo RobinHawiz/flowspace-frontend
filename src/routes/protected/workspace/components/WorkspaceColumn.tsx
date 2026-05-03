@@ -2,6 +2,7 @@ import { useRef, type PropsWithChildren } from "react";
 import { useSortable } from "@dnd-kit/react/sortable";
 import type { WorkspaceColumnResponse } from "@customTypes/workspaceColumn";
 import editColumn from "@images/edit-column.svg";
+import addTask from "@images/add-task.svg";
 import { useDroppable } from "@dnd-kit/react";
 
 interface Props extends PropsWithChildren {
@@ -12,6 +13,7 @@ interface Props extends PropsWithChildren {
   openEditWorkspaceColumnModal: (
     workspaceColumn: WorkspaceColumnResponse,
   ) => void;
+  openAddTaskModal: (workspaceColumn: WorkspaceColumnResponse) => void;
 }
 
 function WorkspaceColumn({
@@ -21,6 +23,7 @@ function WorkspaceColumn({
   isEmpty,
   isDisabled,
   openEditWorkspaceColumnModal,
+  openAddTaskModal,
 }: Props) {
   const handleRef = useRef<HTMLHeadingElement | null>(null);
   const { ref } = useSortable({
@@ -39,6 +42,7 @@ function WorkspaceColumn({
     accept: ["task"],
     disabled: !isEmpty,
   });
+
   return (
     <li ref={ref} className="relative">
       <div className="border-accent max-w-70 min-w-70 rounded-lg border border-solid bg-white/28 p-2.5 shadow-md backdrop-blur-sm">
@@ -63,6 +67,15 @@ function WorkspaceColumn({
           className="relative flex min-h-25 flex-col gap-3"
         >
           {children}
+          <li className="mt-auto">
+            <button
+              onClick={() => openAddTaskModal(workspaceColumn)}
+              className="btn focus:outline-accent w-full gap-2.5 rounded-lg border-none bg-pink-200 p-2.5 text-rose-600 hover:bg-pink-300"
+            >
+              <p className="">Add task</p>
+              <img src={addTask} />
+            </button>
+          </li>
         </ul>
       </div>
     </li>
