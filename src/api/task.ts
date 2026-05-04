@@ -5,6 +5,7 @@ import {
   type TaskCreation,
   type TaskUpdate,
   type TaskOrderUpdate,
+  type TaskDeletion,
 } from "@customTypes/task";
 import delay from "@utils/delay";
 
@@ -110,6 +111,17 @@ export async function updateTask(payload: TaskUpdate) {
     credentials: "include" as const,
   };
   // Simulate network latency.
+  await delay(700);
+  await request(`/workspaces/${workspaceId}/tasks/${taskId}`, options);
+}
+
+export async function deleteTask(payload: TaskDeletion) {
+  const { workspaceId, taskId } = payload;
+  const options = {
+    method: "DELETE" as const,
+    credentials: "include" as const,
+  };
+  // Simulate network delay
   await delay(700);
   await request(`/workspaces/${workspaceId}/tasks/${taskId}`, options);
 }

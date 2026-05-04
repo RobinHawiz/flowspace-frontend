@@ -5,7 +5,7 @@ import type { TaskResponse } from "@customTypes/task";
 import date from "@images/date.svg";
 import column from "@images/column-task-modal.svg";
 import editTask from "@images/edit-task.svg";
-import TaskUpdateModal from "@protectedRoutes/workspace/components/TaskUpdateModal";
+import TaskEditModal from "@protectedRoutes/workspace/components/TaskEditModal";
 import delay from "@utils/delay";
 
 type Props = {
@@ -111,7 +111,7 @@ function TaskDetailsModal({
       </FormModal>
       {isTaskUpdateOpen &&
         createPortal(
-          <TaskUpdateModal
+          <TaskEditModal
             workspaceId={workspaceId}
             task={task}
             setSuccessMessage={setSuccessMessage}

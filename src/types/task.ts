@@ -77,3 +77,12 @@ export const taskUpdateSchema = z.object({
     )
     .nullable(),
 });
+
+export type TaskDeletion = z.infer<typeof taskDeletionSchema>;
+
+export const taskDeletionSchema = z.object({
+  workspaceId: z.number(),
+  workspaceColumnId: z.number(),
+  taskId: z.number(),
+  taskOrder: z.number(),
+});

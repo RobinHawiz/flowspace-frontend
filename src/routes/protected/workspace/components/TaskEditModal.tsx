@@ -9,8 +9,13 @@ import { useMutation } from "@tanstack/react-query";
 import FormModal from "@components/FormModal";
 import { AppError } from "@customTypes/appError";
 import { taskUpdateSchema, type TaskResponse } from "@customTypes/task";
-import { taskUpdateMutationOptions } from "@hooks/queryOptions";
+import {
+  taskDeleteMutationOptions,
+  taskUpdateMutationOptions,
+} from "@hooks/queryOptions";
+import { toast } from "react-toastify";
 import save from "@images/save.svg";
+import deleteIcon from "@images/delete.svg";
 import useHandleExpiredSession from "@hooks/useHandleExpiredSession";
 import getUnexpectedFormErrorMessage from "@utils/getUnexpectedFormErrorMessage";
 
@@ -22,7 +27,7 @@ type Props = {
   onClose: () => Promise<void>;
 };
 
-function TaskUpdateModal({
+function TaskEditModal({
   workspaceId,
   task,
   setSuccessMessage,
@@ -33,6 +38,8 @@ function TaskUpdateModal({
   const handleExpiredSession = useHandleExpiredSession();
   const { mutateAsync: taskUpdateMutation, isPending: isUpdating } =
     useMutation(taskUpdateMutationOptions());
+  const { mutateAsync: taskDeleteMutation, isPending: isDeleting } =
+    useMutation(taskDeleteMutationOptions());
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -85,6 +92,49 @@ function TaskUpdateModal({
           case 400:
             setErrorMessage(
               "Something went wrong while updating the task. Please try again.",
+            );
+            break;
+          default:
+            setErrorMessage("An unexpected error occurred. Please try again.");
+        }
+        console.error(err.message);
+      } else {
+        const errorMessage = getUnexpectedFormErrorMessage(err);
+        setErrorMessage(errorMessage);
+      }
+    }
+  };
+
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this task? This action cannot be undone.",
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await taskDeleteMutation({
+        workspaceId,
+        workspaceColumnId: task.workspaceColumnId,
+        taskId: task.id,
+        taskOrder: task.taskOrder,
+      });
+      dialogRef.current?.close();
+      await onClose();
+      toast.success("Task deleted successfully!");
+    } catch (err) {
+      if (err instanceof AppError) {
+        switch (err.statusCode) {
+          case 401:
+            await handleExpiredSession();
+            break;
+          case 403:
+            setErrorMessage(
+              "You don't have permission to delete tasks in this workspace.",
+            );
+            break;
+          case 400:
+            setErrorMessage(
+              "Something went wrong while deleting the task. Please try again.",
             );
             break;
           default:
@@ -169,23 +219,43 @@ function TaskUpdateModal({
             </p>
           </div>
         )}
-        {isUpdating && (
+        {(isUpdating || isDeleting) && (
           <div className="flex-center flex-col">
             <span className="loading loading-spinner text-accent w-8 sm:w-12"></span>
             <p className="text-accent mt-2 block text-sm sm:text-base">
-              Updating task...
+              {isUpdating ? "Updating task..." : "Deleting task..."}
             </p>
           </div>
         )}
-        <button
-          disabled={isUpdating}
-          className="btn btn-primary gap-2.5 rounded-lg"
-        >
-          Save changes <img src={save} />
-        </button>
+        <div className="flex gap-4">
+          <button
+            type="button"
+            disabled={isUpdating || isDeleting}
+            onClick={handleDelete}
+            className="btn btn-primary flex-1 gap-2.5 rounded-lg border-none bg-red-200 text-red-500 hover:bg-red-300 focus:outline-red-500 disabled:cursor-not-allowed disabled:bg-red-100 disabled:text-red-300"
+          >
+            Delete
+            <img
+              src={deleteIcon}
+              className={isUpdating || isDeleting ? "opacity-30" : ""}
+            />
+          </button>
+          <button
+            disabled={isUpdating || isDeleting}
+            className="btn btn-primary flex-1 gap-2.5 rounded-lg"
+          >
+            <p>
+              Save <span className="xs:inline hidden">changes</span>
+            </p>
+            <img
+              src={save}
+              className={isUpdating || isDeleting ? "opacity-30" : ""}
+            />
+          </button>
+        </div>
       </form>
     </FormModal>
   );
 }
 
-export default TaskUpdateModal;
+export default TaskEditModal;

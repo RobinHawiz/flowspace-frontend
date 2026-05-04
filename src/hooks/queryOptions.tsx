@@ -36,6 +36,7 @@ import type {
 } from "@customTypes/workspaceColumn";
 import {
   addTask,
+  deleteTask,
   getTasks,
   moveTaskToDifferentColumn,
   updateTask,
@@ -44,6 +45,7 @@ import {
 import type {
   MoveTaskToDifferentColumn,
   TaskCreation,
+  TaskDeletion,
   TaskOrderUpdate,
   TaskResponse,
   TaskUpdate,
@@ -443,6 +445,32 @@ export function taskUpdateMutationOptions() {
                   : t,
               )
             : oldData;
+        },
+      );
+    },
+  });
+}
+
+export function taskDeleteMutationOptions() {
+  return mutationOptions({
+    mutationFn: (payload: TaskDeletion) => deleteTask(payload),
+    onSuccess: (_data, payload) => {
+      queryClient.setQueryData<Array<TaskResponse>>(
+        ["tasks", payload.workspaceId],
+        (oldData) => {
+          if (!oldData) return oldData;
+          return oldData
+            .filter((t) => t.id !== payload.taskId) // Remove the deleted task
+            .map((t) => {
+              if (
+                t.workspaceColumnId === payload.workspaceColumnId &&
+                t.taskOrder > payload.taskOrder
+              ) {
+                return { ...t, taskOrder: t.taskOrder - 1 };
+              } else {
+                return t;
+              }
+            }); // Reorder remaining tasks
         },
       );
     },
