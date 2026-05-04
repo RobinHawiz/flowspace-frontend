@@ -57,3 +57,23 @@ export const taskCreationSchema = z.object({
     .nullable(),
   taskOrder: z.number(),
 });
+
+export type TaskUpdate = z.infer<typeof taskUpdateSchema>;
+
+export const taskUpdateSchema = z.object({
+  workspaceId: z.number(),
+  taskId: z.number(),
+  title: z
+    .string()
+    .min(1, "Task title cannot be empty")
+    .max(200, "Task title cannot exceed 200 characters."),
+  description: z.string().nullable(),
+  priority: z.enum(["low", "medium", "high"]),
+  deadline: z
+    .string()
+    .regex(
+      /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/,
+      "Deadline must be in ISO format (e.g. 2023-12-31T23:59:59.000Z)",
+    )
+    .nullable(),
+});

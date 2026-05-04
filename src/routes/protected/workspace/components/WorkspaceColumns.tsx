@@ -279,6 +279,7 @@ function WorkspaceColumns({
                 {columnTasks.map((task, index) => {
                   return (
                     <Task
+                      workspaceId={workspaceId}
                       key={task.id}
                       index={index}
                       task={task}

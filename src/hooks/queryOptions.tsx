@@ -38,6 +38,7 @@ import {
   addTask,
   getTasks,
   moveTaskToDifferentColumn,
+  updateTask,
   updateTaskOrder,
 } from "@api/task";
 import type {
@@ -45,6 +46,7 @@ import type {
   TaskCreation,
   TaskOrderUpdate,
   TaskResponse,
+  TaskUpdate,
 } from "@customTypes/task";
 
 export function appUserRegisterMutationOptions() {
@@ -420,6 +422,27 @@ export function taskAddMutationOptions() {
         ["tasks", payload.workspaceId],
         (oldData) => {
           return oldData ? [...oldData, task] : [task];
+        },
+      );
+    },
+  });
+}
+
+export function taskUpdateMutationOptions() {
+  return mutationOptions({
+    mutationFn: (payload: TaskUpdate) => updateTask(payload),
+    onSuccess: (_data, payload) => {
+      const { taskId, title, description, priority, deadline } = payload;
+      queryClient.setQueryData<Array<TaskResponse>>(
+        ["tasks", payload.workspaceId],
+        (oldData) => {
+          return oldData
+            ? oldData.map((t) =>
+                t.id === taskId
+                  ? { ...t, title, description, priority, deadline }
+                  : t,
+              )
+            : oldData;
         },
       );
     },

@@ -3,6 +3,7 @@ import {
   taskResponseSchema,
   type MoveTaskToDifferentColumn,
   type TaskCreation,
+  type TaskUpdate,
   type TaskOrderUpdate,
 } from "@customTypes/task";
 import delay from "@utils/delay";
@@ -90,4 +91,25 @@ export async function addTask(payload: TaskCreation) {
   const response = await request(`/workspaces/${workspaceId}/tasks`, options);
   const task = taskResponseSchema.parse(response);
   return task;
+}
+
+export async function updateTask(payload: TaskUpdate) {
+  const { workspaceId, taskId, title, description, priority, deadline } =
+    payload;
+  const options = {
+    method: "PATCH" as const,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title,
+      description,
+      priority,
+      deadline,
+    }),
+    credentials: "include" as const,
+  };
+  // Simulate network latency.
+  await delay(700);
+  await request(`/workspaces/${workspaceId}/tasks/${taskId}`, options);
 }

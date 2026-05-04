@@ -10,7 +10,7 @@ function FormModal({ id, children, dialogRef, onClose }: ModalProps) {
   return (
     <dialog
       id={id}
-      className="modal"
+      className="modal z-10"
       ref={dialogRef}
       onKeyDown={(e) => e.key === "Escape" && onClose?.()}
     >

@@ -7,6 +7,7 @@ import TaskDetailsModal from "@protectedRoutes/workspace/components/TaskDetailsM
 import delay from "@utils/delay";
 
 type Props = {
+  workspaceId: number;
   index: number;
   task: TaskResponse;
   workspaceColumnId: number;
@@ -15,6 +16,7 @@ type Props = {
 };
 
 function Task({
+  workspaceId,
   task,
   index,
   workspaceColumnId,
@@ -79,6 +81,7 @@ function Task({
       {isTaskDetailsOpen &&
         createPortal(
           <TaskDetailsModal
+            workspaceId={workspaceId}
             task={task}
             workspaceColumnTitle={workspaceColumnTitle}
             dialogRef={taskDetailsModalRef}
