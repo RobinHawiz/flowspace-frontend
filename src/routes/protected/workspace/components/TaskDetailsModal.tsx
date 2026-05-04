@@ -62,7 +62,7 @@ function TaskDetailsModal({
     <>
       <FormModal dialogRef={dialogRef} onClose={onClose}>
         <div className="flex flex-col gap-5">
-          <div className="flex gap-2.5 text-sm font-bold">
+          <div className="flex flex-wrap gap-2.5 text-sm font-bold">
             <span
               className={`${
                 task.priority === "high"
