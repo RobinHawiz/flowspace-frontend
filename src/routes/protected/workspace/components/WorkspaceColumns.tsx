@@ -283,6 +283,7 @@ function WorkspaceColumns({
                       index={index}
                       task={task}
                       workspaceColumnId={column.id}
+                      workspaceColumnTitle={column.title}
                       isDisabled={
                         isUpdatingTaskOrder || isMovingTaskToDifferentColumn
                       }

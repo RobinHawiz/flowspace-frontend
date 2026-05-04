@@ -1,16 +1,18 @@
-import type { PropsWithChildren } from "react";
+import { type PropsWithChildren, type RefObject } from "react";
 
 interface ModalProps extends PropsWithChildren {
-  id: string;
+  id?: string;
+  dialogRef?: RefObject<HTMLDialogElement | null>;
   onClose: () => void;
 }
 
-function FormModal({ id, children, onClose }: ModalProps) {
+function FormModal({ id, children, dialogRef, onClose }: ModalProps) {
   return (
     <dialog
       id={id}
       className="modal"
-      onKeyDown={(e) => e.key === "Escape" && onClose()}
+      ref={dialogRef}
+      onKeyDown={(e) => e.key === "Escape" && onClose?.()}
     >
       <div className="modal-box">{children}</div>
       <form method="dialog" className="modal-backdrop">
