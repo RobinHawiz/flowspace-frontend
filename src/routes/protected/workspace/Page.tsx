@@ -14,7 +14,7 @@ import WorkspaceColumnAddModal from "@protectedRoutes/workspace/components/Works
 import type { WorkspaceColumnResponse } from "@customTypes/workspaceColumn";
 import { useState } from "react";
 import WorkspaceColumnEditModal from "@protectedRoutes/workspace/components/WorkspaceColumnEditModal";
-import WorkspaceTaskAddModal from "@protectedRoutes/workspace/components/WorkspaceTaskAddModal";
+import TaskAddModal from "@protectedRoutes/workspace/components/TaskAddModal";
 
 const ADD_WORKSPACE_COLUMN_MODAL_ID = "add_workspace_column_dialog";
 const EDIT_WORKSPACE_COLUMN_MODAL_ID = "edit_workspace_column_dialog";
@@ -139,7 +139,7 @@ export function Component() {
         workspaceColumn={selectedWorkspaceColumn}
       />
       {tasks && (
-        <WorkspaceTaskAddModal
+        <TaskAddModal
           workspaceId={workspaceId!}
           workspaceColumnId={selectedWorkspaceColumn.id}
           taskOrder={tasks!

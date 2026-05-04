@@ -18,11 +18,7 @@ type Props = {
 const ADD_TASK_MODAL_ID = "add_task_dialog";
 const FORM_ID = "add_task_form";
 
-function WorkspaceTaskAddModal({
-  workspaceId,
-  workspaceColumnId,
-  taskOrder,
-}: Props) {
+function TaskAddModal({ workspaceId, workspaceColumnId, taskOrder }: Props) {
   const [errorMessage, setErrorMessage] = useState("");
   const handleExpiredSession = useHandleExpiredSession();
   const { mutateAsync: taskAddMutation, isPending: isAdding } = useMutation(
@@ -195,4 +191,4 @@ function WorkspaceTaskAddModal({
   );
 }
 
-export default WorkspaceTaskAddModal;
+export default TaskAddModal;
