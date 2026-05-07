@@ -45,8 +45,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   const logout = useCallback(async () => {
     await logoutUser();
-    queryClient.invalidateQueries({ queryKey: ["currentAppUser"] });
-    queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+    queryClient.clear();
     setIsLoggedIn(false);
   }, [queryClient]);
 
