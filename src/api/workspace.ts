@@ -7,6 +7,7 @@ import {
   type WorkspaceMembersRemove,
   type WorkspaceUpdate,
 } from "@customTypes/workspace";
+import { trackClientRequestId } from "@utils/clientRequestTracker";
 import delay from "@utils/delay";
 
 export async function getWorkspaces() {
@@ -36,14 +37,19 @@ export async function getWorkspace(workspaceId: number) {
 }
 
 export async function createWorkspace(payload: WorkspaceCreation) {
+  const clientRequestId = crypto.randomUUID();
+  trackClientRequestId(clientRequestId);
+
   const options = {
     method: "POST" as const,
     headers: {
       "Content-Type": "application/json",
+      "X-Client-Request-Id": clientRequestId,
     },
     body: JSON.stringify(payload),
     credentials: "include" as const,
   };
+
   // Simulate network latency.
   await delay(700);
   const response = await request(`/workspaces`, options);
@@ -52,28 +58,38 @@ export async function createWorkspace(payload: WorkspaceCreation) {
 }
 
 export async function updateWorkspace(workspace: WorkspaceUpdate) {
-  // Simulate network delay
-  await delay(700);
+  const clientRequestId = crypto.randomUUID();
+  trackClientRequestId(clientRequestId);
 
   const options = {
     method: "PATCH" as const,
     headers: {
       "Content-Type": "application/json",
+      "X-Client-Request-Id": clientRequestId,
     },
     body: JSON.stringify({ title: workspace.title }),
     credentials: "include" as const,
   };
+
+  // Simulate network delay
+  await delay(700);
   await request(`/workspaces/${workspace.id}`, options);
 }
 
 export async function deleteWorkspace(workspaceId: number) {
-  // Simulate network delay
-  await delay(700);
+  const clientRequestId = crypto.randomUUID();
+  trackClientRequestId(clientRequestId);
 
   const options = {
     method: "DELETE" as const,
+    headers: {
+      "X-Client-Request-Id": clientRequestId,
+    },
     credentials: "include" as const,
   };
+
+  // Simulate network delay
+  await delay(700);
   await request(`/workspaces/${workspaceId}`, options);
 }
 

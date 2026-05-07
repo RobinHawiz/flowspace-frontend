@@ -17,7 +17,6 @@ import type {
   WorkspaceMembersAdd,
   WorkspaceMembersRemove,
   WorkspaceMembersResponse,
-  WorkspaceResponse,
   WorkspaceUpdate,
 } from "@customTypes/workspace";
 import {
@@ -50,6 +49,11 @@ import type {
   TaskResponse,
   TaskUpdate,
 } from "@customTypes/task";
+import {
+  addWorkspaceToCache,
+  removeWorkspaceFromCache,
+  updateWorkspaceInCache,
+} from "@utils/queryCache";
 
 export function appUserRegisterMutationOptions() {
   return mutationOptions({
@@ -60,54 +64,21 @@ export function appUserRegisterMutationOptions() {
 export function workspaceCreationMutationOptions() {
   return mutationOptions({
     mutationFn: (workspace: WorkspaceCreation) => createWorkspace(workspace),
-    onSuccess: (workspace) => {
-      queryClient.setQueryData<Array<WorkspaceResponse>>(
-        ["workspaces"],
-        (oldData) => {
-          return oldData ? [...oldData, workspace] : [workspace];
-        },
-      );
-    },
+    onSuccess: (workspace) => addWorkspaceToCache(workspace),
   });
 }
 
 export function workspaceEditMutationOptions() {
   return mutationOptions({
     mutationFn: (workspace: WorkspaceUpdate) => updateWorkspace(workspace),
-    onSuccess: (_data, workspace) => {
-      queryClient.setQueryData<Array<WorkspaceResponse>>(
-        ["workspaces"],
-        (oldData) => {
-          return oldData
-            ? oldData.map((w) =>
-                w.id === workspace.id ? { ...w, ...workspace } : w,
-              )
-            : oldData;
-        },
-      );
-      queryClient.setQueryData<WorkspaceResponse>(
-        ["workspaces", workspace.id],
-        (oldData) => {
-          return oldData ? { ...oldData, ...workspace } : oldData;
-        },
-      );
-    },
+    onSuccess: (_data, workspace) => updateWorkspaceInCache(workspace),
   });
 }
 
 export function workspaceDeleteMutationOptions() {
   return mutationOptions({
     mutationFn: (workspaceId: number) => deleteWorkspace(workspaceId),
-    onSuccess: (_data, workspaceId) => {
-      queryClient.invalidateQueries({ queryKey: ["workspaces", workspaceId] });
-      queryClient.setQueryData<Array<WorkspaceResponse>>(
-        ["workspaces"],
-        (oldData) => {
-          if (!oldData) return oldData;
-          return oldData.filter((w) => w.id !== workspaceId);
-        },
-      );
-    },
+    onSuccess: (_data, workspaceId) => removeWorkspaceFromCache(workspaceId),
   });
 }
 

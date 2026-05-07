@@ -5,6 +5,7 @@ import { ToastContainer, Bounce } from "react-toastify";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@src/queryClient";
 import { AuthProvider } from "@contexts/AuthProvider";
+import { SocketProvider } from "@contexts/SocketProvider";
 import PrivateRoutes from "@components/PrivateRoutes";
 import App from "@src/App";
 
@@ -48,20 +49,22 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <RouterProvider router={router} />
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable={false}
-        pauseOnHover
-        theme="colored"
-        transition={Bounce}
-      />
+      <SocketProvider>
+        <RouterProvider router={router} />
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable={false}
+          pauseOnHover
+          theme="colored"
+          transition={Bounce}
+        />
+      </SocketProvider>
     </AuthProvider>
   </QueryClientProvider>,
 );

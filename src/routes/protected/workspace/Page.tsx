@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import WorkspaceEditModal from "@protectedRoutes/workspace/components/WorkspaceEditModal";
@@ -12,9 +13,9 @@ import MemberAddModal from "@protectedRoutes/workspace/components/MemberAddModal
 import WorkspaceColumns from "@protectedRoutes/workspace/components/WorkspaceColumns";
 import WorkspaceColumnAddModal from "@protectedRoutes/workspace/components/WorkspaceColumnAddModal";
 import type { WorkspaceColumnResponse } from "@customTypes/workspaceColumn";
-import { useState } from "react";
 import WorkspaceColumnEditModal from "@protectedRoutes/workspace/components/WorkspaceColumnEditModal";
 import TaskAddModal from "@protectedRoutes/workspace/components/TaskAddModal";
+import { useSocket } from "@contexts/SocketProvider";
 
 const ADD_WORKSPACE_COLUMN_MODAL_ID = "add_workspace_column_dialog";
 const EDIT_WORKSPACE_COLUMN_MODAL_ID = "edit_workspace_column_dialog";
@@ -94,6 +95,23 @@ export function Component() {
     ) as HTMLDialogElement;
     modal.showModal();
   };
+
+  const { socket, isConnected } = useSocket();
+
+  useEffect(() => {
+    if (!socket || !isConnected || !workspace) return;
+
+    function handleJoinError(error: unknown) {
+      console.error("Error joining workspace room", error);
+    }
+
+    socket.emit("workspace:join", workspace.id);
+    socket.on("workspace:join_error", handleJoinError);
+
+    return () => {
+      socket.off("workspace:join_error", handleJoinError);
+    };
+  }, [socket, isConnected, workspace]);
 
   return (
     <DrawerMenu
