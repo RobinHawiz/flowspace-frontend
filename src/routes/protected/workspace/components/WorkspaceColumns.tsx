@@ -237,31 +237,6 @@ function WorkspaceColumns({
                   }
                 }
               }
-              // Task was dragged to an empty column (Droppable)
-              else {
-                const {
-                  id: taskId,
-                  taskOrder: prevTaskOrder,
-                  workspaceColumnId: prevWorkspaceColumnId,
-                } = source.data as TaskResponse;
-                const newWorkspaceColumnId = String(target.id);
-                const newTaskOrder = 0;
-
-                try {
-                  await moveTaskToDifferentColumn({
-                    workspaceId,
-                    taskId,
-                    prevTaskOrder,
-                    prevWorkspaceColumnId,
-                    newWorkspaceColumnId,
-                    newTaskOrder,
-                  });
-                } catch (err) {
-                  await handleTaskOrderError(err);
-                } finally {
-                  setTempBoardState(null);
-                }
-              }
             }
           }}
         >
