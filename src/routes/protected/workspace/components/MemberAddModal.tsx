@@ -30,14 +30,9 @@ function MemberAddModal({ workspaceId }: Props) {
     const formData = new FormData(form);
     formData.append("workspaceId", workspaceId);
     const data = Object.fromEntries(formData);
-    // We need to convert the id to a number before validation, since form data is always string values
-    const dataToParse = {
-      workspaceId: Number(data.workspaceId),
-      email: data.email,
-    };
 
     // Validation
-    const result = workspaceMembersAddSchema.safeParse(dataToParse);
+    const result = workspaceMembersAddSchema.safeParse(data);
     if (result.error) {
       setErrorMessage(result.error.issues[0].message);
       return;

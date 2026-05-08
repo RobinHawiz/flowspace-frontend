@@ -8,7 +8,7 @@ import {
 } from "@customTypes/workspaceColumn";
 import delay from "@utils/delay";
 
-export async function getWorkspaceColumns(workspaceId: number) {
+export async function getWorkspaceColumns(workspaceId: string) {
   const options = {
     method: "GET" as const,
     credentials: "include" as const,

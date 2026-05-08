@@ -41,17 +41,11 @@ function WorkspaceColumnEditModal({ workspaceId, workspaceColumn }: Props) {
     const form = e.currentTarget;
     const formData = new FormData(form);
     formData.append("workspaceId", workspaceId);
-    formData.append("workspaceColumnId", String(workspaceColumn.id));
+    formData.append("workspaceColumnId", workspaceColumn.id);
     const data = Object.fromEntries(formData);
-    // We need to convert numbers before validation, since form data is always string values
-    const dataToParse = {
-      workspaceId: Number(data.workspaceId),
-      workspaceColumnId: Number(data.workspaceColumnId),
-      title: data.title,
-    };
 
     // Validation
-    const result = WorkspaceColumnTitleUpdateSchema.safeParse(dataToParse);
+    const result = WorkspaceColumnTitleUpdateSchema.safeParse(data);
     if (result.error) {
       setErrorMessage(result.error.issues[0].message);
       return;
@@ -102,7 +96,7 @@ function WorkspaceColumnEditModal({ workspaceId, workspaceColumn }: Props) {
 
     try {
       await workspaceColumnDeleteMutation({
-        workspaceId: Number(workspaceId),
+        workspaceId,
         workspaceColumnId: workspaceColumn.id,
       });
       const modal = document.getElementById(

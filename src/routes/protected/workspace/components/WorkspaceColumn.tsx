@@ -37,7 +37,7 @@ function WorkspaceColumn({
   });
 
   const { ref: droppableRef } = useDroppable({
-    id: `${workspaceColumn.id}`,
+    id: `droppable-${workspaceColumn.id}`,
     type: "droppable",
     accept: ["task"],
     disabled: !isEmpty,

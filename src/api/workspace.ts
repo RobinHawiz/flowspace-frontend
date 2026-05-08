@@ -24,7 +24,7 @@ export async function getWorkspaces() {
   return workspaces;
 }
 
-export async function getWorkspace(workspaceId: number) {
+export async function getWorkspace(workspaceId: string) {
   const options = {
     method: "GET" as const,
     credentials: "include" as const,
@@ -76,7 +76,7 @@ export async function updateWorkspace(workspace: WorkspaceUpdate) {
   await request(`/workspaces/${workspace.id}`, options);
 }
 
-export async function deleteWorkspace(workspaceId: number) {
+export async function deleteWorkspace(workspaceId: string) {
   const clientRequestId = crypto.randomUUID();
   trackClientRequestId(clientRequestId);
 
@@ -93,7 +93,7 @@ export async function deleteWorkspace(workspaceId: number) {
   await request(`/workspaces/${workspaceId}`, options);
 }
 
-export async function getWorkspaceMembers(workspaceId: number) {
+export async function getWorkspaceMembers(workspaceId: string) {
   const options = {
     method: "GET" as const,
     credentials: "include" as const,

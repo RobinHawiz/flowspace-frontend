@@ -6,7 +6,7 @@ export type WorkspaceColumnResponse = z.infer<
 >;
 
 export const workspaceColumnResponseSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   title: z.string(),
   workspaceColumnOrder: z.number(),
 });
@@ -17,8 +17,8 @@ export type WorkspaceColumnOrderUpdate = z.infer<
 >;
 
 export const workspaceColumnOrderUpdateSchema = z.object({
-  workspaceId: z.number(),
-  workspaceColumnId: z.number(),
+  workspaceId: z.string(),
+  workspaceColumnId: z.string(),
   workspaceColumnOrderNew: z.number(),
   workspaceColumnOrderCurrent: z.number(),
 });
@@ -28,7 +28,7 @@ export type WorkspaceColumnCreation = z.infer<
 >;
 
 export const WorkspaceColumnCreationSchema = z.object({
-  workspaceId: z.number(),
+  workspaceId: z.string(),
   title: z
     .string()
     .min(1, "Column title cannot be empty")
@@ -41,8 +41,8 @@ export type WorkspaceColumnTitleUpdate = z.infer<
 >;
 
 export const WorkspaceColumnTitleUpdateSchema = z.object({
-  workspaceId: z.number(),
-  workspaceColumnId: z.number(),
+  workspaceId: z.string(),
+  workspaceColumnId: z.string(),
   title: z
     .string()
     .min(1, "Column title cannot be empty")
@@ -54,6 +54,6 @@ export type WorkspaceColumnDeletion = z.infer<
 >;
 
 export const WorkspaceColumnDeletionSchema = z.object({
-  workspaceId: z.number(),
-  workspaceColumnId: z.number(),
+  workspaceId: z.string(),
+  workspaceColumnId: z.string(),
 });

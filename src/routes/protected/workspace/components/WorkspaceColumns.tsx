@@ -18,7 +18,7 @@ import useHandleExpiredSession from "@hooks/useHandleExpiredSession";
 import getUnexpectedFormErrorMessage from "@utils/getUnexpectedFormErrorMessage";
 
 type Props = {
-  workspaceId: number;
+  workspaceId: string;
   workspaceColumns: Array<WorkspaceColumnResponse>;
   tasks: Array<TaskResponse>;
   openAddWorkspaceColumnModal: () => void;
@@ -48,12 +48,12 @@ function WorkspaceColumns({
     isPending: isMovingTaskToDifferentColumn,
   } = useMutation(moveTaskToDifferentColumnMutationOptions());
   const [tempBoardState, setTempBoardState] = useState<Record<
-    number,
+    string,
     Array<TaskResponse>
   > | null>(null);
 
   const baseBoardState = useMemo(() => {
-    const state: Record<number, Array<TaskResponse>> = {};
+    const state: Record<string, Array<TaskResponse>> = {};
     workspaceColumns.forEach((column) => {
       state[column.id] = tasks.filter(
         (task) => task.workspaceColumnId === column.id,
@@ -128,19 +128,19 @@ function WorkspaceColumns({
             const nextBoardState = { ...currentBoardState };
             if (isSortable(source)) {
               const task = source.data as TaskResponse;
-              const prevWorkspaceColumnId = Number(
-                Object.keys(currentBoardState).find((columnId) => {
-                  return currentBoardState[Number(columnId)].some(
+              const prevWorkspaceColumnId = Object.keys(currentBoardState).find(
+                (columnId) => {
+                  return currentBoardState[columnId].some(
                     (t) => t.id === task.id,
                   );
-                })!,
-              );
+                },
+              )!;
               // Remove the task from its previous column position optimistically
               nextBoardState[prevWorkspaceColumnId] = nextBoardState[
                 prevWorkspaceColumnId
               ].filter((t) => t.id !== task.id);
               if (isSortable(target)) {
-                const newWorkspaceColumnId = target.group as number;
+                const newWorkspaceColumnId = target.group as string;
                 // Task was dragged over the same column or to another column (Sortable)
                 if (source.type === "task" && target.type === "task") {
                   // Insert the task into its new column position optimistically
@@ -152,7 +152,8 @@ function WorkspaceColumns({
               }
               // Task was dragged over an empty column (Droppable)
               else {
-                const newWorkspaceColumnId = Number(target.id);
+                // Droppable target IDs are prefixed to avoid ID collisions with sortable items, so we need to remove the prefix to get the actual column ID.
+                const newWorkspaceColumnId = String(target.id).split("-")[1];
                 // Insert the task into its new column position optimistically
                 nextBoardState[newWorkspaceColumnId] = nextBoardState[
                   newWorkspaceColumnId
@@ -183,7 +184,7 @@ function WorkspaceColumns({
                         taskId,
                         prevTaskOrder,
                         prevWorkspaceColumnId,
-                        newWorkspaceColumnId: Number(target.group),
+                        newWorkspaceColumnId: String(target.group),
                         newTaskOrder,
                       });
                     } catch (err) {
@@ -243,7 +244,7 @@ function WorkspaceColumns({
                   taskOrder: prevTaskOrder,
                   workspaceColumnId: prevWorkspaceColumnId,
                 } = source.data as TaskResponse;
-                const newWorkspaceColumnId = Number(target.id);
+                const newWorkspaceColumnId = String(target.id);
                 const newTaskOrder = 0;
 
                 try {

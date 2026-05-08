@@ -38,11 +38,9 @@ function WorkspaceEditModal({ workspaceId }: Props) {
     const formData = new FormData(form);
     formData.append("id", workspaceId);
     const data = Object.fromEntries(formData);
-    // We need to convert the id to a number before validation, since form data is always string values
-    const dataToParse = { id: Number(data.id), title: data.title };
 
     // Validation
-    const result = workspaceUpdateSchema.safeParse(dataToParse);
+    const result = workspaceUpdateSchema.safeParse(data);
     if (result.error) {
       setErrorMessage(result.error.issues[0].message);
       return;
@@ -92,7 +90,7 @@ function WorkspaceEditModal({ workspaceId }: Props) {
     if (!confirmDelete) return;
 
     try {
-      await workspaceDeleteMutation(Number(workspaceId));
+      await workspaceDeleteMutation(workspaceId);
       const modal = document.getElementById(
         EDIT_WORKSPACE_MODAL_ID,
       ) as HTMLDialogElement;

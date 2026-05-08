@@ -4,8 +4,8 @@ import z from "zod";
 export type TaskResponse = z.infer<typeof taskResponseSchema>;
 
 export const taskResponseSchema = z.object({
-  id: z.number(),
-  workspaceColumnId: z.number(),
+  id: z.string(),
+  workspaceColumnId: z.string(),
   title: z.string(),
   description: z.string().nullable(),
   priority: z.enum(["low", "medium", "high"]),
@@ -17,9 +17,9 @@ export const taskResponseSchema = z.object({
 export type TaskOrderUpdate = z.infer<typeof taskOrderUpdateSchema>;
 
 export const taskOrderUpdateSchema = z.object({
-  workspaceId: z.number(),
-  workspaceColumnId: z.number(),
-  taskId: z.number(),
+  workspaceId: z.string(),
+  workspaceColumnId: z.string(),
+  taskId: z.string(),
   currentTaskOrder: z.number(),
   newTaskOrder: z.number(),
 });
@@ -29,19 +29,19 @@ export type MoveTaskToDifferentColumn = z.infer<
 >;
 
 export const moveTaskToDifferentColumnSchema = z.object({
-  workspaceId: z.number(),
-  taskId: z.number(),
+  workspaceId: z.string(),
+  taskId: z.string(),
   prevTaskOrder: z.number(),
-  prevWorkspaceColumnId: z.number(),
-  newWorkspaceColumnId: z.number(),
+  prevWorkspaceColumnId: z.string(),
+  newWorkspaceColumnId: z.string(),
   newTaskOrder: z.number(),
 });
 
 export type TaskCreation = z.infer<typeof taskCreationSchema>;
 
 export const taskCreationSchema = z.object({
-  workspaceId: z.number(),
-  workspaceColumnId: z.number(),
+  workspaceId: z.string(),
+  workspaceColumnId: z.string(),
   title: z
     .string()
     .min(1, "Task title cannot be empty")
@@ -61,8 +61,8 @@ export const taskCreationSchema = z.object({
 export type TaskUpdate = z.infer<typeof taskUpdateSchema>;
 
 export const taskUpdateSchema = z.object({
-  workspaceId: z.number(),
-  taskId: z.number(),
+  workspaceId: z.string(),
+  taskId: z.string(),
   title: z
     .string()
     .min(1, "Task title cannot be empty")
@@ -81,8 +81,8 @@ export const taskUpdateSchema = z.object({
 export type TaskDeletion = z.infer<typeof taskDeletionSchema>;
 
 export const taskDeletionSchema = z.object({
-  workspaceId: z.number(),
-  workspaceColumnId: z.number(),
-  taskId: z.number(),
+  workspaceId: z.string(),
+  workspaceColumnId: z.string(),
+  taskId: z.string(),
   taskOrder: z.number(),
 });

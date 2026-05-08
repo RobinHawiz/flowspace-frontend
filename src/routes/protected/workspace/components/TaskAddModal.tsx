@@ -11,7 +11,7 @@ import addTaskModal from "@images/add-task-modal.svg";
 
 type Props = {
   workspaceId: string;
-  workspaceColumnId: number;
+  workspaceColumnId: string;
   taskOrder: number;
 };
 
@@ -32,18 +32,18 @@ function TaskAddModal({ workspaceId, workspaceColumnId, taskOrder }: Props) {
     const form = e.currentTarget;
     const formData = new FormData(form);
     formData.append("workspaceId", workspaceId);
-    formData.append("workspaceColumnId", String(workspaceColumnId));
+    formData.append("workspaceColumnId", workspaceColumnId);
     formData.append("taskOrder", String(taskOrder));
     const data = Object.fromEntries(formData);
-    // We need to convert numbers, strings and nullable values before validation, since form data is always string values
+    // FormData values are always strings, so we convert the order field and normalize nullable values before validation.
     const dataToParse = {
-      workspaceId: Number(data.workspaceId),
-      workspaceColumnId: Number(data.workspaceColumnId),
+      workspaceId: data.workspaceId,
+      workspaceColumnId: data.workspaceColumnId,
       title: data.title,
       description: data.description ? data.description : null,
       priority: data.priority,
       deadline: data.deadline
-        ? new Date(String(data.deadline)).toISOString()
+        ? new Date(data.deadline as string).toISOString()
         : null,
       taskOrder: Number(data.taskOrder),
     };

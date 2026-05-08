@@ -20,7 +20,7 @@ import useHandleExpiredSession from "@hooks/useHandleExpiredSession";
 import getUnexpectedFormErrorMessage from "@utils/getUnexpectedFormErrorMessage";
 
 type Props = {
-  workspaceId: number;
+  workspaceId: string;
   task: TaskResponse;
   setSuccessMessage: Dispatch<SetStateAction<string>>;
   dialogRef: RefObject<HTMLDialogElement | null>;
@@ -47,18 +47,18 @@ function TaskEditModal({
 
     const form = e.currentTarget;
     const formData = new FormData(form);
-    formData.append("workspaceId", String(workspaceId));
-    formData.append("taskId", String(task.id));
+    formData.append("workspaceId", workspaceId);
+    formData.append("taskId", task.id);
     const data = Object.fromEntries(formData);
-    // We need to convert numbers, strings and nullable values before validation, since form data is always string values
+    // FormData values are always strings, so we normalize nullable values before validation.
     const dataToParse = {
-      workspaceId: Number(data.workspaceId),
-      taskId: Number(data.taskId),
+      workspaceId: data.workspaceId,
+      taskId: data.taskId,
       title: data.title,
       description: data.description ? data.description : null,
       priority: data.priority,
       deadline: data.deadline
-        ? new Date(String(data.deadline)).toISOString()
+        ? new Date(data.deadline as string).toISOString()
         : null,
     };
 

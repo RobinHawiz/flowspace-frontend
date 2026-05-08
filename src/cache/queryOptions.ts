@@ -77,7 +77,7 @@ export function workspaceEditMutationOptions() {
 
 export function workspaceDeleteMutationOptions() {
   return mutationOptions({
-    mutationFn: (workspaceId: number) => deleteWorkspace(workspaceId),
+    mutationFn: (workspaceId: string) => deleteWorkspace(workspaceId),
     onSuccess: (_data, workspaceId) => removeWorkspaceFromCache(workspaceId),
   });
 }
@@ -464,7 +464,7 @@ export function workspacesQueryOptions() {
   });
 }
 
-export function workspaceQueryOptions(workspaceId: number) {
+export function workspaceQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: ["workspaces", workspaceId],
     queryFn: () => getWorkspace(workspaceId),
@@ -472,7 +472,7 @@ export function workspaceQueryOptions(workspaceId: number) {
   });
 }
 
-export function workspaceMembersQueryOptions(workspaceId: number) {
+export function workspaceMembersQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: ["members", workspaceId],
     queryFn: () => getWorkspaceMembers(workspaceId),
@@ -480,7 +480,7 @@ export function workspaceMembersQueryOptions(workspaceId: number) {
   });
 }
 
-export function workspaceColumnsQueryOptions(workspaceId: number) {
+export function workspaceColumnsQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: ["columns", workspaceId],
     queryFn: () => getWorkspaceColumns(workspaceId),
@@ -488,7 +488,7 @@ export function workspaceColumnsQueryOptions(workspaceId: number) {
   });
 }
 
-export function tasksQueryOptions(workspaceId: number) {
+export function tasksQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: ["tasks", workspaceId],
     queryFn: () => getTasks(workspaceId),

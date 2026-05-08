@@ -81,7 +81,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
     }
 
     function handleWorkspaceUpdated(
-      workspaceId: number,
+      workspaceId: string,
       workspaceTitle: string,
       clientRequestId: string,
     ) {
@@ -91,7 +91,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
     }
 
     function handleWorkspaceDeleted(
-      workspaceId: number,
+      workspaceId: string,
       clientRequestId: string,
     ) {
       if (!consumeClientRequestId(clientRequestId)) {

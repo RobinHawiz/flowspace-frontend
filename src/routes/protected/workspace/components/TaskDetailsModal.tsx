@@ -9,7 +9,7 @@ import TaskEditModal from "@protectedRoutes/workspace/components/TaskEditModal";
 import delay from "@utils/delay";
 
 type Props = {
-  workspaceId: number;
+  workspaceId: string;
   task: TaskResponse;
   workspaceColumnTitle: string;
   dialogRef: RefObject<HTMLDialogElement | null>;

@@ -43,15 +43,18 @@ export function ErrorBoundary() {
 
 export function Component() {
   const { workspaceId } = useParams<{ workspaceId: string }>();
+  if (!workspaceId) {
+    throw new Error("Missing workspace ID.");
+  }
   const { data: workspace, isFetching: isFetchingWorkspace } = useQuery(
-    workspaceQueryOptions(Number(workspaceId!)),
+    workspaceQueryOptions(workspaceId),
   );
   const { data: workspaceMembers, isFetching: isFetchingWorkspaceMembers } =
-    useQuery(workspaceMembersQueryOptions(Number(workspaceId!)));
+    useQuery(workspaceMembersQueryOptions(workspaceId));
   const { data: workspaceColumns, isFetching: isFetchingWorkspaceColumns } =
-    useQuery(workspaceColumnsQueryOptions(Number(workspaceId!)));
+    useQuery(workspaceColumnsQueryOptions(workspaceId));
   const { data: tasks, isFetching: isFetchingTasks } = useQuery(
-    tasksQueryOptions(Number(workspaceId!)),
+    tasksQueryOptions(workspaceId),
   );
 
   const [selectedWorkspaceColumn, setSelectedWorkspaceColumn] =
@@ -136,7 +139,7 @@ export function Component() {
           </div>
         ) : (
           <WorkspaceColumns
-            workspaceId={Number(workspaceId!)}
+            workspaceId={workspaceId}
             workspaceColumns={workspaceColumns!}
             tasks={tasks!}
             openAddWorkspaceColumnModal={openAddWorkspaceColumnModal}
@@ -146,19 +149,19 @@ export function Component() {
         )}
       </div>
       <WorkspaceColumnAddModal
-        workspaceId={workspaceId!}
+        workspaceId={workspaceId}
         workspaceColumnOrder={(workspaceColumns
           ? workspaceColumns.length
           : 0
         ).toString()}
       />
       <WorkspaceColumnEditModal
-        workspaceId={workspaceId!}
+        workspaceId={workspaceId}
         workspaceColumn={selectedWorkspaceColumn}
       />
       {tasks && (
         <TaskAddModal
-          workspaceId={workspaceId!}
+          workspaceId={workspaceId}
           workspaceColumnId={selectedWorkspaceColumn.id}
           taskOrder={tasks!
             .filter(
@@ -171,8 +174,8 @@ export function Component() {
         />
       )}
 
-      <WorkspaceEditModal workspaceId={workspaceId!} />
-      <MemberAddModal workspaceId={workspaceId!} />
+      <WorkspaceEditModal workspaceId={workspaceId} />
+      <MemberAddModal workspaceId={workspaceId} />
     </DrawerMenu>
   );
 }

@@ -4,7 +4,7 @@ import z from "zod";
 export type WorkspaceResponse = z.infer<typeof workspaceResponseSchema>;
 
 export const workspaceResponseSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   title: z.string(),
   role: z.enum(["admin", "member"]),
 });
@@ -23,7 +23,7 @@ export const workspaceCreationSchema = z.object({
 export type WorkspaceUpdate = z.infer<typeof workspaceUpdateSchema>;
 
 export const workspaceUpdateSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   title: z
     .string()
     .min(1, "Title must be between 1 and 50 characters.")
@@ -35,7 +35,7 @@ export type WorkspaceMembersResponse = z.infer<
 >;
 
 export const workspaceMembersResponseSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   firstName: z.string(),
   lastName: z.string(),
   email: z.email(),
@@ -45,7 +45,7 @@ export const workspaceMembersResponseSchema = z.object({
 export type WorkspaceMembersAdd = z.infer<typeof workspaceMembersAddSchema>;
 
 export const workspaceMembersAddSchema = z.object({
-  workspaceId: z.number(),
+  workspaceId: z.string(),
   email: z.email(),
 });
 
@@ -54,6 +54,6 @@ export type WorkspaceMembersRemove = z.infer<
 >;
 
 export const workspaceMembersRemoveSchema = z.object({
-  workspaceId: z.number(),
-  appUserId: z.number(),
+  workspaceId: z.string(),
+  appUserId: z.string(),
 });

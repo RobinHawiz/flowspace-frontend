@@ -31,9 +31,9 @@ function WorkspaceColumnAddModal({ workspaceId, workspaceColumnOrder }: Props) {
     formData.append("workspaceId", workspaceId);
     formData.append("workspaceColumnOrder", workspaceColumnOrder);
     const data = Object.fromEntries(formData);
-    // We need to convert numbers before validation, since form data is always string values
+    // FormData values are always strings, so we convert the order field before validation.
     const dataToParse = {
-      workspaceId: Number(data.workspaceId),
+      workspaceId: data.workspaceId,
       title: data.title,
       workspaceColumnOrder: Number(data.workspaceColumnOrder),
     };

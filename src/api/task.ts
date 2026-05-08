@@ -9,7 +9,7 @@ import {
 } from "@customTypes/task";
 import delay from "@utils/delay";
 
-export async function getTasks(workspaceId: number) {
+export async function getTasks(workspaceId: string) {
   const options = {
     method: "GET" as const,
     credentials: "include" as const,

@@ -7,10 +7,10 @@ import TaskDetailsModal from "@protectedRoutes/workspace/components/TaskDetailsM
 import delay from "@utils/delay";
 
 type Props = {
-  workspaceId: number;
+  workspaceId: string;
   index: number;
   task: TaskResponse;
-  workspaceColumnId: number;
+  workspaceColumnId: string;
   workspaceColumnTitle: string;
   isDisabled: boolean;
 };

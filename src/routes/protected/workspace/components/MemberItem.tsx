@@ -10,10 +10,10 @@ import removeMember from "@images/remove-member.svg";
 import admin from "@images/admin.svg";
 
 type MemberItemProps = {
-  currentAppUserId: number;
+  currentAppUserId: string;
   currentAppUserRole: string;
   member: WorkspaceMembersResponse;
-  workspaceId: number;
+  workspaceId: string;
 };
 
 function MemberItem({

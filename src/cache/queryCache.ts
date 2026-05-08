@@ -32,7 +32,7 @@ export function updateWorkspaceInCache(workspace: WorkspaceUpdate) {
   );
 }
 
-export function removeWorkspaceFromCache(workspaceId: number) {
+export function removeWorkspaceFromCache(workspaceId: string) {
   queryClient.invalidateQueries({ queryKey: ["workspaces", workspaceId] });
   queryClient.setQueryData<Array<WorkspaceResponse>>(
     ["workspaces"],

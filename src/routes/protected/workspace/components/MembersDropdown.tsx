@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 const MEMBERS_DROPDOWN_ID = "members-dropdown";
 
 type Props = {
-  workspaceId: number;
+  workspaceId: string;
   workspaceMembers: Array<WorkspaceMembersResponse>;
 };
 
