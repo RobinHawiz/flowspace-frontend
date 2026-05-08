@@ -12,7 +12,7 @@ import { taskUpdateSchema, type TaskResponse } from "@customTypes/task";
 import {
   taskDeleteMutationOptions,
   taskUpdateMutationOptions,
-} from "@hooks/queryOptions";
+} from "@cache/queryOptions";
 import { toast } from "react-toastify";
 import save from "@images/save.svg";
 import deleteIcon from "@images/delete.svg";

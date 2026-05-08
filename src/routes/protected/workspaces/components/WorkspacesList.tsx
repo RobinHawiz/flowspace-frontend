@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { workspacesQueryOptions } from "@hooks/queryOptions";
+import { workspacesQueryOptions } from "@cache/queryOptions";
 import WorkspaceCard from "@protectedRoutes/workspaces/components/WorkspaceCard";
 import createWorkspace from "@images/create-workspace.svg";
 import empty from "@images/empty.svg";

@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import {
   workspaceColumnDeleteMutationOptions,
   workspaceColumnUpdateTitleMutationOptions,
-} from "@hooks/queryOptions";
+} from "@cache/queryOptions";
 import useHandleExpiredSession from "@hooks/useHandleExpiredSession";
 import getUnexpectedFormErrorMessage from "@utils/getUnexpectedFormErrorMessage";
 import {

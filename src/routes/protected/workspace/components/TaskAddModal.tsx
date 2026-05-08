@@ -1,6 +1,6 @@
 import { useState, type SubmitEvent } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { taskAddMutationOptions } from "@hooks/queryOptions";
+import { taskAddMutationOptions } from "@cache/queryOptions";
 import useHandleExpiredSession from "@hooks/useHandleExpiredSession";
 import getUnexpectedFormErrorMessage from "@utils/getUnexpectedFormErrorMessage";
 import { taskCreationSchema } from "@customTypes/task";

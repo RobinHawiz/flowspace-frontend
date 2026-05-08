@@ -2,7 +2,7 @@ import { useState, type SubmitEvent } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
-import { appUserRegisterMutationOptions } from "@hooks/queryOptions";
+import { appUserRegisterMutationOptions } from "@cache/queryOptions";
 import {
   appUserRegistrationSchema,
   type AppUserRegistration,

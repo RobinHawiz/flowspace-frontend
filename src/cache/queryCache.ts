@@ -1,4 +1,4 @@
-import { queryClient } from "@src/queryClient";
+import { queryClient } from "@src/cache/queryClient";
 import type {
   WorkspaceResponse,
   WorkspaceUpdate,

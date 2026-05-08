@@ -1,5 +1,5 @@
 import type { WorkspaceMembersResponse } from "@customTypes/workspace";
-import { appUserQueryOptions } from "@hooks/queryOptions";
+import { appUserQueryOptions } from "@cache/queryOptions";
 import members from "@images/members.svg";
 import MemberItem from "@protectedRoutes/workspace/components/MemberItem";
 import { useQuery } from "@tanstack/react-query";

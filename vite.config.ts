@@ -23,6 +23,7 @@ export default defineConfig({
     alias: {
       "@images": path.resolve(import.meta.dirname, "public/images"),
       "@api": path.resolve(import.meta.dirname, "src/api"),
+      "@cache": path.resolve(import.meta.dirname, "src/cache"),
       "@components": path.resolve(import.meta.dirname, "src/components"),
       "@contexts": path.resolve(import.meta.dirname, "src/contexts"),
       "@hooks": path.resolve(import.meta.dirname, "src/hooks"),

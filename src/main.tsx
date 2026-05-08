@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer, Bounce } from "react-toastify";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "@src/queryClient";
+import { queryClient } from "@cache/queryClient";
 import { AuthProvider } from "@contexts/AuthProvider";
 import { SocketProvider } from "@contexts/SocketProvider";
 import PrivateRoutes from "@components/PrivateRoutes";

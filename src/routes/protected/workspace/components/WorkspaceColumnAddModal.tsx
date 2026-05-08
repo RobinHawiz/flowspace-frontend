@@ -1,6 +1,6 @@
 import { useState, type SubmitEvent } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { workspaceColumnAddMutationOptions } from "@hooks/queryOptions";
+import { workspaceColumnAddMutationOptions } from "@cache/queryOptions";
 import useHandleExpiredSession from "@hooks/useHandleExpiredSession";
 import getUnexpectedFormErrorMessage from "@utils/getUnexpectedFormErrorMessage";
 import { WorkspaceColumnCreationSchema } from "@customTypes/workspaceColumn";

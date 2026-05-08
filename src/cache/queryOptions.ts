@@ -1,5 +1,5 @@
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
-import { queryClient } from "@src/queryClient";
+import { queryClient } from "@src/cache/queryClient";
 import { getUser, registerUser } from "@api/appUser";
 import {
   addWorkspaceMember,
@@ -53,7 +53,7 @@ import {
   addWorkspaceToCache,
   removeWorkspaceFromCache,
   updateWorkspaceInCache,
-} from "@utils/queryCache";
+} from "@src/cache/queryCache";
 
 export function appUserRegisterMutationOptions() {
   return mutationOptions({

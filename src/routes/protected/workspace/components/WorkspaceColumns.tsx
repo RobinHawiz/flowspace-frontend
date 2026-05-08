@@ -10,7 +10,7 @@ import {
   moveTaskToDifferentColumnMutationOptions,
   taskOrderUpdateMutationOptions,
   workspaceColumnOrderUpdateMutationOptions,
-} from "@hooks/queryOptions";
+} from "@cache/queryOptions";
 import type { TaskResponse } from "@customTypes/task";
 import type { WorkspaceColumnResponse } from "@customTypes/workspaceColumn";
 import addColumn from "@images/add-column.svg";

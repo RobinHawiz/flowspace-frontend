@@ -13,7 +13,7 @@ import {
   addWorkspaceToCache,
   removeWorkspaceFromCache,
   updateWorkspaceInCache,
-} from "@utils/queryCache";
+} from "@cache/queryCache";
 
 type SocketContextType = {
   socket: Socket | null;

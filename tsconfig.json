@@ -17,6 +17,7 @@
     "paths": {
       "@images/*": ["./public/images/*"],
       "@api/*": ["./src/api/*"],
+      "@cache/*": ["./src/cache/*"],
       "@components/*": ["./src/components/*"],
       "@contexts/*": ["./src/contexts/*"],
       "@hooks/*": ["./src/hooks/*"],

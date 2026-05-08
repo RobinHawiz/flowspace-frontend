@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 import type { WorkspaceMembersResponse } from "@customTypes/workspace";
-import { workspaceMembersRemoveMutationOptions } from "@hooks/queryOptions";
+import { workspaceMembersRemoveMutationOptions } from "@cache/queryOptions";
 import useHandleExpiredSession from "@hooks/useHandleExpiredSession";
 import { AppError } from "@customTypes/appError";
 import getUnexpectedFormErrorMessage from "@utils/getUnexpectedFormErrorMessage";

@@ -7,7 +7,7 @@ import {
   type PropsWithChildren,
 } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { appUserQueryOptions } from "@hooks/queryOptions";
+import { appUserQueryOptions } from "@cache/queryOptions";
 import type { AppUserCredentials } from "@customTypes/appUser";
 import { loginUser, logoutUser } from "@api/appUser";
 

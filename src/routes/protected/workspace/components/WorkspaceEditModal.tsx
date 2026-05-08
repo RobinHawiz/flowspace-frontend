@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import {
   workspaceDeleteMutationOptions,
   workspaceEditMutationOptions,
-} from "@hooks/queryOptions";
+} from "@cache/queryOptions";
 import useHandleExpiredSession from "@hooks/useHandleExpiredSession";
 import getUnexpectedFormErrorMessage from "@utils/getUnexpectedFormErrorMessage";
 import { workspaceUpdateSchema } from "@customTypes/workspace";

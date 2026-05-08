@@ -8,7 +8,7 @@ import {
   workspaceColumnsQueryOptions,
   workspaceMembersQueryOptions,
   workspaceQueryOptions,
-} from "@hooks/queryOptions";
+} from "@cache/queryOptions";
 import MemberAddModal from "@protectedRoutes/workspace/components/MemberAddModal";
 import WorkspaceColumns from "@protectedRoutes/workspace/components/WorkspaceColumns";
 import WorkspaceColumnAddModal from "@protectedRoutes/workspace/components/WorkspaceColumnAddModal";
