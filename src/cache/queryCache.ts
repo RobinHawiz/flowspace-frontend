@@ -1,5 +1,6 @@
 import { queryClient } from "@src/cache/queryClient";
 import type {
+  WorkspaceMembersResponse,
   WorkspaceResponse,
   WorkspaceUpdate,
 } from "@customTypes/workspace";
@@ -39,6 +40,18 @@ export function removeWorkspaceFromCache(workspaceId: string) {
     (oldData) => {
       if (!oldData) return oldData;
       return oldData.filter((w) => w.id !== workspaceId);
+    },
+  );
+}
+
+export function addWorkspaceMemberToCache(
+  workspaceMember: WorkspaceMembersResponse,
+  workspaceId: string,
+) {
+  queryClient.setQueryData<Array<WorkspaceMembersResponse>>(
+    ["members", workspaceId],
+    (oldData) => {
+      return oldData ? [...oldData, workspaceMember] : [workspaceMember];
     },
   );
 }

@@ -111,10 +111,14 @@ export async function getWorkspaceMembers(workspaceId: string) {
 }
 
 export async function addWorkspaceMember(payload: WorkspaceMembersAdd) {
+  const clientRequestId = crypto.randomUUID();
+  trackClientRequestId(clientRequestId);
+
   const options = {
     method: "POST" as const,
     headers: {
       "Content-Type": "application/json",
+      "X-Client-Request-Id": clientRequestId,
     },
     body: JSON.stringify({ email: payload.email }),
     credentials: "include" as const,

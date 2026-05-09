@@ -50,10 +50,11 @@ import type {
   TaskUpdate,
 } from "@customTypes/task";
 import {
+  addWorkspaceMemberToCache,
   addWorkspaceToCache,
   removeWorkspaceFromCache,
   updateWorkspaceInCache,
-} from "@src/cache/queryCache";
+} from "@cache/queryCache";
 
 export function appUserRegisterMutationOptions() {
   return mutationOptions({
@@ -86,12 +87,7 @@ export function workspaceMembersAddMutationOptions() {
   return mutationOptions({
     mutationFn: (payload: WorkspaceMembersAdd) => addWorkspaceMember(payload),
     onSuccess: (workspaceMember, payload) => {
-      queryClient.setQueryData<Array<WorkspaceMembersResponse>>(
-        ["members", payload.workspaceId],
-        (oldData) => {
-          return oldData ? [...oldData, workspaceMember] : [workspaceMember];
-        },
-      );
+      addWorkspaceMemberToCache(workspaceMember, payload.workspaceId);
     },
   });
 }

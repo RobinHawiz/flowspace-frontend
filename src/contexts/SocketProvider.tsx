@@ -7,9 +7,13 @@ import {
   type PropsWithChildren,
 } from "react";
 import { useAuth } from "@contexts/AuthProvider";
-import type { WorkspaceResponse } from "@customTypes/workspace";
+import type {
+  WorkspaceMembersResponse,
+  WorkspaceResponse,
+} from "@customTypes/workspace";
 import { consumeClientRequestId } from "@utils/clientRequestTracker";
 import {
+  addWorkspaceMemberToCache,
   addWorkspaceToCache,
   removeWorkspaceFromCache,
   updateWorkspaceInCache,
@@ -99,12 +103,28 @@ export function SocketProvider({ children }: PropsWithChildren) {
       }
     }
 
+    function handleWorkspaceMemberAdded(
+      workspaceId: string,
+      addedMember: WorkspaceMembersResponse,
+      clientRequestId: string,
+    ) {
+      if (!consumeClientRequestId(clientRequestId)) {
+        addWorkspaceMemberToCache(addedMember, workspaceId);
+      }
+    }
+
+    function handleWorkspaceMembershipAdded(workspace: WorkspaceResponse) {
+      addWorkspaceToCache(workspace);
+    }
+
     newSocket.on("connect", handleConnection);
     newSocket.on("disconnect", handleDisconnection);
     newSocket.on("connect_error", handleConnectionError);
     newSocket.on("workspace:created", handleWorkspaceCreated);
     newSocket.on("workspace:updated", handleWorkspaceUpdated);
     newSocket.on("workspace:deleted", handleWorkspaceDeleted);
+    newSocket.on("workspace:memberAdded", handleWorkspaceMemberAdded);
+    newSocket.on("workspace:membershipAdded", handleWorkspaceMembershipAdded);
 
     newSocket.connect();
 
@@ -115,6 +135,11 @@ export function SocketProvider({ children }: PropsWithChildren) {
       newSocket.off("workspace:created", handleWorkspaceCreated);
       newSocket.off("workspace:updated", handleWorkspaceUpdated);
       newSocket.off("workspace:deleted", handleWorkspaceDeleted);
+      newSocket.off("workspace:memberAdded", handleWorkspaceMemberAdded);
+      newSocket.off(
+        "workspace:membershipAdded",
+        handleWorkspaceMembershipAdded,
+      );
 
       newSocket.disconnect();
 
