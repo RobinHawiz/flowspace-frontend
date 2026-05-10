@@ -6,6 +6,7 @@ import getUnexpectedFormErrorMessage from "@utils/getUnexpectedFormErrorMessage"
 import { workspaceCreationSchema } from "@customTypes/workspace";
 import { AppError } from "@customTypes/appError";
 import FormModal from "@components/FormModal";
+import { toast } from "react-toastify";
 
 const CREATE_WORKSPACE_MODAL_ID = "create_workspace_dialog";
 const FORM_ID = "create_workspace_form";
@@ -40,6 +41,7 @@ function WorkspaceCreateModal() {
         CREATE_WORKSPACE_MODAL_ID,
       ) as HTMLDialogElement;
       modal.close();
+      toast.success("Workspace added successfully!");
     } catch (err) {
       if (err instanceof AppError) {
         switch (err.statusCode) {
