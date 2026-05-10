@@ -185,7 +185,10 @@ export function Component() {
         />
       )}
 
-      <WorkspaceEditModal workspaceId={workspaceId} />
+      <WorkspaceEditModal
+        workspaceId={workspaceId}
+        workspaceTitle={workspace!.title}
+      />
       <MemberAddModal workspaceId={workspaceId} />
     </DrawerMenu>
   );

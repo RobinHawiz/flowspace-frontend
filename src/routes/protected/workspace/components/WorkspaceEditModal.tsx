@@ -16,12 +16,13 @@ import deleteIcon from "@images/delete.svg";
 
 type Props = {
   workspaceId: string;
+  workspaceTitle: string;
 };
 
 const EDIT_WORKSPACE_MODAL_ID = "edit_workspace_dialog";
 const FORM_ID = "edit_workspace_form";
 
-function WorkspaceEditModal({ workspaceId }: Props) {
+function WorkspaceEditModal({ workspaceId, workspaceTitle }: Props) {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   const handleExpiredSession = useHandleExpiredSession();
@@ -147,6 +148,7 @@ function WorkspaceEditModal({ workspaceId }: Props) {
             className="focus:border-accent w-full rounded-lg border border-solid border-slate-500 px-4 py-2 text-sm transition-colors duration-200 ease-in-out focus:outline-none"
             type="text"
             name="title"
+            defaultValue={workspaceTitle}
           />
         </div>
         {errorMessage && (
