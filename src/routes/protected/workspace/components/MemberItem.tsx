@@ -88,6 +88,7 @@ function MemberItem({
         <div className="skeleton pointer-events-none h-11 w-full animate-pulse rounded-lg"></div>
       ) : (
         <button
+          aria-label={`Remove ${member.firstName} ${member.lastName}${isCurrentUser ? " (you)" : ""} from the workspace`}
           disabled={isRemoving}
           onClick={handleRemoveMember}
           className="flex rounded-lg"

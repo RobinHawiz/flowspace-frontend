@@ -26,7 +26,7 @@ function MembersDropdown({ workspaceId, workspaceMembers }: Props) {
         style={{ anchorName: "--anchor-members" }}
         popoverTarget={MEMBERS_DROPDOWN_ID}
       >
-        <img src={members} />
+        <img src={members} alt="" />
         <p className="mr-auto">Members</p>
       </button>
       <ul

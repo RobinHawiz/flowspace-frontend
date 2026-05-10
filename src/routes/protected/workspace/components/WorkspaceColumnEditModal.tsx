@@ -182,6 +182,7 @@ function WorkspaceColumnEditModal({ workspaceId, workspaceColumn }: Props) {
             Delete{" "}
             <img
               src={deleteIcon}
+              alt=""
               className={isUpdating || isDeleting ? "opacity-30" : ""}
             />
           </button>
@@ -192,7 +193,7 @@ function WorkspaceColumnEditModal({ workspaceId, workspaceColumn }: Props) {
             <p>
               Save <span className="xs:inline hidden">changes</span>
             </p>
-            <img src={save} />
+            <img src={save} alt="" />
           </button>
         </div>
       </form>

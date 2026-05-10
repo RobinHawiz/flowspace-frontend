@@ -79,9 +79,10 @@ function DrawerMenu({
             <label
               id="drawer-content-btn"
               htmlFor="my-drawer-5"
+              aria-label="Open navigation menu"
               className="btn drawer-button text-accent border-none not-hover:bg-transparent"
             >
-              <img src={openMenu} className="min-w-5.5" />
+              <img src={openMenu} alt="" className="min-w-5.5" />
             </label>
           </nav>
           {workspace !== undefined || isLoading ? (
@@ -99,7 +100,7 @@ function DrawerMenu({
               onClick={openAddWorkspaceMembersModal}
             >
               <p className="mr-auto">Add member</p>
-              <img src={addMember} />
+              <img src={addMember} alt="" />
             </button>
           )}
         </header>
@@ -117,10 +118,11 @@ function DrawerMenu({
           <li className="inline">
             <button
               id="drawer-side-btn"
+              aria-label="Close navigation menu"
               className="btn focus:outline-accent border-none not-hover:bg-transparent"
               onClick={toggleDrawer}
             >
-              <img src={closeMenu} />
+              <img src={closeMenu} alt="" />
             </button>
           </li>
           {location.pathname.includes("workspaces/") && (
@@ -129,7 +131,7 @@ function DrawerMenu({
                 className="btn focus:outline-accent gap-2.5 rounded-lg border-none bg-white p-2.5 hover:bg-slate-100"
                 onClick={() => navigate("/workspaces", { replace: true })}
               >
-                <img src={back} />
+                <img src={back} alt="" />
                 <p className="mr-auto">Back to workspaces</p>
               </button>
             </li>
@@ -140,7 +142,7 @@ function DrawerMenu({
                 className="btn focus:outline-accent gap-2.5 rounded-lg border-none bg-white p-2.5 hover:bg-slate-100"
                 onClick={openEditWorkspaceModal}
               >
-                <img src={edit} />
+                <img src={edit} alt="" />
                 <p className="mr-auto">Edit workspace</p>
               </button>
             </li>
@@ -159,7 +161,7 @@ function DrawerMenu({
                 className="xs:hidden btn focus:outline-accent flex gap-2.5 rounded-lg border-none bg-white p-2.5 hover:bg-slate-100"
                 onClick={openAddWorkspaceMembersModal}
               >
-                <img src={addMemberDrawer} />
+                <img src={addMemberDrawer} alt="" />
                 <p className="mr-auto">Add member</p>
               </button>
             </li>
@@ -169,7 +171,7 @@ function DrawerMenu({
               className="btn focus:outline-accent gap-2.5 rounded-lg border-none bg-white p-2.5 hover:bg-slate-100"
               onClick={logoutUser}
             >
-              <img src={logOut} />
+              <img src={logOut} alt="" />
               <p className="mr-auto">Log out</p>
             </button>
           </li>

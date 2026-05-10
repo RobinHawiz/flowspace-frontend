@@ -237,6 +237,7 @@ function TaskEditModal({
             Delete
             <img
               src={deleteIcon}
+              alt=""
               className={isUpdating || isDeleting ? "opacity-30" : ""}
             />
           </button>
@@ -249,6 +250,7 @@ function TaskEditModal({
             </p>
             <img
               src={save}
+              alt=""
               className={isUpdating || isDeleting ? "opacity-30" : ""}
             />
           </button>

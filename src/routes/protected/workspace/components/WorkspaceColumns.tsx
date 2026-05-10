@@ -277,7 +277,7 @@ function WorkspaceColumns({
         className="btn focus:outline-accent gap-2.5 self-start rounded-lg border-none bg-pink-200 p-2.5 text-rose-600 hover:bg-pink-300"
       >
         <p className="mr-auto">Add column</p>
-        <img src={addColumn} />
+        <img src={addColumn} alt="" />
       </button>
     </div>
   );

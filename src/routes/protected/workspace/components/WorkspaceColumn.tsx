@@ -56,10 +56,11 @@ function WorkspaceColumn({
             {workspaceColumn.title}
           </h2>
           <button
+            aria-label={`Edit ${workspaceColumn.title} column`}
             onClick={() => openEditWorkspaceColumnModal(workspaceColumn)}
             className="btn focus:outline-accent gap-2.5 self-start rounded-lg border-none bg-pink-200 p-2.5 text-rose-600 hover:bg-pink-300"
           >
-            <img src={editColumn} />
+            <img src={editColumn} alt="" />
           </button>
         </div>
         <div
@@ -74,7 +75,7 @@ function WorkspaceColumn({
             className="btn focus:outline-accent w-full gap-2.5 rounded-lg border-none bg-pink-200 p-2.5 text-rose-600 hover:bg-pink-300"
           >
             <p className="">Add task</p>
-            <img src={addTask} />
+            <img src={addTask} alt="" />
           </button>
         </div>
       </div>

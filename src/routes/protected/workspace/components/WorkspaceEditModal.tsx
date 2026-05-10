@@ -171,7 +171,7 @@ function WorkspaceEditModal({ workspaceId }: Props) {
             onClick={handleDelete}
             className="btn btn-primary flex-1 gap-2.5 rounded-lg border-none bg-red-200 text-red-500 focus:outline-red-500"
           >
-            Delete <img src={deleteIcon} />
+            Delete <img src={deleteIcon} alt="" />
           </button>
           <button
             disabled={isUpdating || isDeleting}
@@ -180,7 +180,7 @@ function WorkspaceEditModal({ workspaceId }: Props) {
             <p>
               Save <span className="xs:inline hidden">changes</span>
             </p>
-            <img src={save} />
+            <img src={save} alt="" />
           </button>
         </div>
       </form>

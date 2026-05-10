@@ -65,7 +65,7 @@ function WorkspacesList() {
               <div>
                 <img
                   src={empty}
-                  alt="No workspaces"
+                  alt=""
                   className="xs:w-full mx-auto w-2/3"
                 />
               </div>
@@ -83,7 +83,7 @@ function WorkspacesList() {
             onClick={openCreateWorkspaceModal}
             className="btn btn-primary gap-2.5 rounded-lg"
           >
-            Create Workspace <img src={createWorkspace} />
+            Create Workspace <img src={createWorkspace} alt="" />
           </button>
         </section>
       )}

@@ -125,7 +125,7 @@ function MemberAddModal({ workspaceId }: Props) {
           disabled={isAdding}
           className="btn btn-primary gap-2.5 rounded-lg"
         >
-          Add member <img src={addMemberModal} />
+          Add member <img src={addMemberModal} alt="" />
         </button>
       </form>
     </FormModal>

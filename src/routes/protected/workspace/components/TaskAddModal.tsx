@@ -184,7 +184,7 @@ function TaskAddModal({ workspaceId, workspaceColumnId, taskOrder }: Props) {
           disabled={isAdding}
           className="btn btn-primary gap-2.5 rounded-lg"
         >
-          Add task <img src={addTaskModal} />
+          Add task <img src={addTaskModal} alt="" />
         </button>
       </form>
     </FormModal>
