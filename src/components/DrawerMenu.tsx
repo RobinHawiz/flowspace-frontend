@@ -1,5 +1,5 @@
 import { useState, type PropsWithChildren } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { useAuth } from "@contexts/AuthProvider";
 import MembersDropdown from "@protectedRoutes/workspace/components/MembersDropdown";
@@ -37,6 +37,7 @@ function DrawerMenu({
 }: DrawerMenuProps) {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [checked, setChecked] = useState(false);
 
   const toggleDrawer = async () => {
@@ -122,11 +123,11 @@ function DrawerMenu({
               <img src={closeMenu} />
             </button>
           </li>
-          {workspace && (
+          {location.pathname.includes("workspaces/") && (
             <li>
               <button
                 className="btn focus:outline-accent gap-2.5 rounded-lg border-none bg-white p-2.5 hover:bg-slate-100"
-                onClick={() => navigate("/workspaces")}
+                onClick={() => navigate("/workspaces", { replace: true })}
               >
                 <img src={back} />
                 <p className="mr-auto">Back to workspaces</p>
