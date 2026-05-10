@@ -51,7 +51,7 @@ function WorkspaceColumn({
             ref={(node) => {
               handleRef.current = node;
             }}
-            className="w-full cursor-grab pl-2.5 text-lg font-bold"
+            className="w-full min-w-0 cursor-grab pl-2.5 text-lg font-bold wrap-break-word"
           >
             {workspaceColumn.title}
           </h2>
