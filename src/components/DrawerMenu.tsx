@@ -156,7 +156,7 @@ function DrawerMenu({
           {workspaceMembers && openAddWorkspaceMembersModal && (
             <li>
               <button
-                className="btn focus:outline-accent gap-2.5 rounded-lg border-none bg-white p-2.5 hover:bg-slate-100"
+                className="xs:hidden btn focus:outline-accent flex gap-2.5 rounded-lg border-none bg-white p-2.5 hover:bg-slate-100"
                 onClick={openAddWorkspaceMembersModal}
               >
                 <img src={addMemberDrawer} />
