@@ -52,7 +52,7 @@ function WorkspacesList() {
               <h1 className="xs:text-5xl text-center text-3xl font-bold">
                 Your workspaces
               </h1>
-              <ul>
+              <ul className="flex-center flex flex-wrap gap-3">
                 {workspaces.map((workspace) => (
                   <li key={workspace.id}>
                     <WorkspaceCard {...workspace} />
