@@ -85,7 +85,7 @@ function DrawerMenu({
             </label>
           </nav>
           {workspace !== undefined || isLoading ? (
-            <h1 className="xs:text-2xl text-xl font-bold">
+            <h1 className="xs:text-2xl min-w-0 text-xl font-bold wrap-break-word">
               {workspace?.title || <div className="skeleton h-4 w-28"></div>}
             </h1>
           ) : (
