@@ -63,7 +63,7 @@ function DrawerMenu({
   };
 
   return (
-    <div className="drawer z-10 min-h-svh">
+    <div className="drawer bg-gradient z-10 min-h-svh">
       <input
         id="my-drawer-5"
         type="checkbox"

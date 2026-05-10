@@ -9,7 +9,7 @@ function App() {
   return isLoggedIn ? (
     <Navigate to="/workspaces" />
   ) : (
-    <main className="bg-gradient min-h-svh">
+    <main className="min-h-svh">
       <Outlet />
     </main>
   );

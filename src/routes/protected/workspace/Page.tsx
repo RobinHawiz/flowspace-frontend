@@ -26,7 +26,7 @@ const ADD_TASK_MODAL_ID = "add_task_dialog";
 export function ErrorBoundary() {
   return (
     <DrawerMenu>
-      <div className="flex-center bg-gradient min-h-[90svh] px-4">
+      <div className="flex-center min-h-[90svh] px-4">
         <section className="shadow-elevation-high mb-[10svh] w-full max-w-md rounded-lg bg-red-500 px-6 py-8 text-center text-white">
           <h1 className="mb-2 text-xl font-bold">
             We couldn't load your workspace
@@ -140,7 +140,7 @@ export function Component() {
       openEditWorkspaceModal={openEditWorkspaceModal}
       openAddWorkspaceMembersModal={openAddWorkspaceMembersModal}
     >
-      <div className="bg-gradient min-h-[90svh] overflow-auto">
+      <div className="min-h-[90svh] overflow-auto">
         {isFetchingWorkspace ||
         isFetchingWorkspaceMembers ||
         isFetchingWorkspaceColumns ||
