@@ -112,7 +112,7 @@ function DrawerMenu({
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <ul className="menu bg-base-200 flex min-h-full w-80 flex-col gap-2 p-4 font-bold">
+        <ul className="menu bg-base-200 flex min-h-full w-80 flex-col gap-2.5 p-4 font-bold">
           {/* Sidebar content here */}
           <li className="inline">
             <button
