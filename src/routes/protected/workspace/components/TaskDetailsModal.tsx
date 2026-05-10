@@ -89,7 +89,9 @@ function TaskDetailsModal({
             </span>
           </div>
           <div>
-            <h2 className="mb-2.5 text-lg font-bold">{task.title}</h2>
+            <h2 className="mb-2.5 text-lg font-bold wrap-break-word">
+              {task.title}
+            </h2>
             <p className="text-slate-500">{task.description}</p>
           </div>
           {successMessage && (
