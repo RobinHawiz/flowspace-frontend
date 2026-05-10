@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import WorkspaceEditModal from "@protectedRoutes/workspace/components/WorkspaceEditModal";
 import DrawerMenu from "@components/DrawerMenu";
@@ -56,7 +56,6 @@ export function Component() {
   const { data: tasks, isFetching: isFetchingTasks } = useQuery(
     tasksQueryOptions(workspaceId),
   );
-
   const [selectedWorkspaceColumn, setSelectedWorkspaceColumn] =
     useState<WorkspaceColumnResponse>({} as WorkspaceColumnResponse);
 
@@ -100,21 +99,33 @@ export function Component() {
   };
 
   const { socket, isConnected } = useSocket();
+  const navigate = useNavigate();
+  const workspaceRoomId = workspace?.id;
 
   useEffect(() => {
-    if (!socket || !isConnected || !workspace) return;
+    if (!socket || !isConnected || !workspaceRoomId) return;
+
+    function handleWorkspaceMembershipRemoved(removedWorkspaceId: string) {
+      if (removedWorkspaceId !== workspaceRoomId) return;
+      navigate("/workspaces", { replace: true });
+    }
 
     function handleJoinError(error: unknown) {
       console.error("Error joining workspace room", error);
     }
 
-    socket.emit("workspace:join", workspace.id);
+    socket.emit("workspace:join", workspaceRoomId);
+    socket.on("workspace:membershipRemoved", handleWorkspaceMembershipRemoved);
     socket.on("workspace:join_error", handleJoinError);
 
     return () => {
+      socket.off(
+        "workspace:membershipRemoved",
+        handleWorkspaceMembershipRemoved,
+      );
       socket.off("workspace:join_error", handleJoinError);
     };
-  }, [socket, isConnected, workspace]);
+  }, [socket, isConnected, workspaceRoomId, navigate]);
 
   return (
     <DrawerMenu

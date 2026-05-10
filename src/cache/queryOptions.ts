@@ -16,7 +16,6 @@ import type {
   WorkspaceCreation,
   WorkspaceMembersAdd,
   WorkspaceMembersRemove,
-  WorkspaceMembersResponse,
   WorkspaceUpdate,
 } from "@customTypes/workspace";
 import {
@@ -53,6 +52,7 @@ import {
   addWorkspaceMemberToCache,
   addWorkspaceToCache,
   removeWorkspaceFromCache,
+  removeWorkspaceMemberFromCache,
   updateWorkspaceInCache,
 } from "@cache/queryCache";
 
@@ -96,15 +96,8 @@ export function workspaceMembersRemoveMutationOptions() {
   return mutationOptions({
     mutationFn: (payload: WorkspaceMembersRemove) =>
       removeWorkspaceMember(payload),
-    onSuccess: (_data, payload) => {
-      queryClient.setQueryData<Array<WorkspaceMembersResponse>>(
-        ["members", payload.workspaceId],
-        (oldData) => {
-          if (!oldData) return oldData;
-          return oldData.filter((m) => m.id !== payload.appUserId);
-        },
-      );
-    },
+    onSuccess: (_data, payload) =>
+      removeWorkspaceMemberFromCache(payload.workspaceId, payload.appUserId),
   });
 }
 

@@ -34,7 +34,7 @@ export function updateWorkspaceInCache(workspace: WorkspaceUpdate) {
 }
 
 export function removeWorkspaceFromCache(workspaceId: string) {
-  queryClient.invalidateQueries({ queryKey: ["workspaces", workspaceId] });
+  queryClient.removeQueries({ queryKey: ["workspaces", workspaceId] });
   queryClient.setQueryData<Array<WorkspaceResponse>>(
     ["workspaces"],
     (oldData) => {
@@ -52,6 +52,19 @@ export function addWorkspaceMemberToCache(
     ["members", workspaceId],
     (oldData) => {
       return oldData ? [...oldData, workspaceMember] : [workspaceMember];
+    },
+  );
+}
+
+export function removeWorkspaceMemberFromCache(
+  workspaceId: string,
+  appUserId: string,
+) {
+  queryClient.setQueryData<Array<WorkspaceMembersResponse>>(
+    ["members", workspaceId],
+    (oldData) => {
+      if (!oldData) return oldData;
+      return oldData.filter((m) => m.id !== appUserId);
     },
   );
 }

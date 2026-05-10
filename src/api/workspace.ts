@@ -134,8 +134,14 @@ export async function addWorkspaceMember(payload: WorkspaceMembersAdd) {
 }
 
 export async function removeWorkspaceMember(payload: WorkspaceMembersRemove) {
+  const clientRequestId = crypto.randomUUID();
+  trackClientRequestId(clientRequestId);
+
   const options = {
     method: "DELETE" as const,
+    headers: {
+      "X-Client-Request-Id": clientRequestId,
+    },
     credentials: "include" as const,
   };
   // Simulate network latency.

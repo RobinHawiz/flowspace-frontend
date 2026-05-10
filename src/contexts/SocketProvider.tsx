@@ -16,6 +16,7 @@ import {
   addWorkspaceMemberToCache,
   addWorkspaceToCache,
   removeWorkspaceFromCache,
+  removeWorkspaceMemberFromCache,
   updateWorkspaceInCache,
 } from "@cache/queryCache";
 
@@ -117,6 +118,20 @@ export function SocketProvider({ children }: PropsWithChildren) {
       addWorkspaceToCache(workspace);
     }
 
+    function handleWorkspaceMemberRemoved(
+      workspaceId: string,
+      removedMemberId: string,
+      clientRequestId: string,
+    ) {
+      if (!consumeClientRequestId(clientRequestId)) {
+        removeWorkspaceMemberFromCache(workspaceId, removedMemberId);
+      }
+    }
+
+    function handleWorkspaceMembershipRemoved(workspaceId: string) {
+      removeWorkspaceFromCache(workspaceId);
+    }
+
     newSocket.on("connect", handleConnection);
     newSocket.on("disconnect", handleDisconnection);
     newSocket.on("connect_error", handleConnectionError);
@@ -125,6 +140,11 @@ export function SocketProvider({ children }: PropsWithChildren) {
     newSocket.on("workspace:deleted", handleWorkspaceDeleted);
     newSocket.on("workspace:memberAdded", handleWorkspaceMemberAdded);
     newSocket.on("workspace:membershipAdded", handleWorkspaceMembershipAdded);
+    newSocket.on("workspace:memberRemoved", handleWorkspaceMemberRemoved);
+    newSocket.on(
+      "workspace:membershipRemoved",
+      handleWorkspaceMembershipRemoved,
+    );
 
     newSocket.connect();
 
@@ -139,6 +159,11 @@ export function SocketProvider({ children }: PropsWithChildren) {
       newSocket.off(
         "workspace:membershipAdded",
         handleWorkspaceMembershipAdded,
+      );
+      newSocket.off("workspace:memberRemoved", handleWorkspaceMemberRemoved);
+      newSocket.off(
+        "workspace:membershipRemoved",
+        handleWorkspaceMembershipRemoved,
       );
 
       newSocket.disconnect();

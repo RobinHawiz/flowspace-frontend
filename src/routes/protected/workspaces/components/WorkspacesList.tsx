@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useSocket } from "@contexts/SocketProvider";
 import { workspacesQueryOptions } from "@cache/queryOptions";
 import WorkspaceCard from "@protectedRoutes/workspaces/components/WorkspaceCard";
 import createWorkspace from "@images/create-workspace.svg";
@@ -16,6 +18,28 @@ function WorkspacesList() {
     ) as HTMLDialogElement;
     modal.showModal();
   };
+
+  const { socket, isConnected } = useSocket();
+  const workspaceIds = workspaces?.map((workspace) => workspace.id) || [];
+
+  useEffect(() => {
+    if (!socket || !isConnected || workspaceIds.length === 0) return;
+    workspaceIds.forEach((workspaceId) => {
+      socket.emit("workspace:join", workspaceId);
+    });
+
+    function handleJoinError(error: unknown) {
+      console.error("Error joining workspace room", error);
+    }
+
+    socket.on("workspace:join_error", handleJoinError);
+
+    return () => {
+      socket.off("workspace:join_error", handleJoinError);
+    };
+    // Use a serialized dependency because arrays are compared by reference and would cause the effect to run on every render, regardless of whether the array contents have changed.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket, isConnected, JSON.stringify(workspaceIds)]);
 
   return (
     <>
