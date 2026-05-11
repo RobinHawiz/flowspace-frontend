@@ -6,10 +6,10 @@ type Props = WorkspaceResponse;
 
 function WorkspaceCard({ id, title }: Props) {
   return (
-    <article className="btn relative flex items-center justify-between rounded-lg border-none bg-white px-4 py-2.5 shadow-sm hover:bg-slate-100">
+    <article className="btn relative flex h-full items-center justify-between rounded-lg border-none bg-white px-4 py-2.5 shadow-sm hover:bg-slate-100">
       <div className="flex gap-2.5">
         <img src={workspace} alt="" />
-        <h2 className="xs:text-xl text-lg font-bold">{title}</h2>
+        <h2 className="xs:text-xl text-lg font-bold wrap-anywhere">{title}</h2>
       </div>
       <Link
         to={`/workspaces/${id}`}
