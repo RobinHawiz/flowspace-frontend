@@ -83,9 +83,9 @@ function TaskDetailsModal({
                 <p>{formattedDate}</p>
               </span>
             )}
-            <span className="flex-center gap-2 rounded-full bg-black/10 px-3.75 py-1.25 text-black">
+            <span className="flex-center min-w-0 gap-2 rounded-full bg-black/10 px-3.75 py-1.25 text-black">
               <img src={column} alt="" />
-              <p>{workspaceColumnTitle}</p>
+              <p className="min-w-0 wrap-break-word">{workspaceColumnTitle}</p>
             </span>
           </div>
           <div>
