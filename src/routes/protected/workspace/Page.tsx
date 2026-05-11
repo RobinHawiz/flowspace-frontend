@@ -184,11 +184,12 @@ export function Component() {
             .reduce((prev, current) => (prev > current ? prev : current), 0)}
         />
       )}
-
-      <WorkspaceEditModal
-        workspaceId={workspaceId}
-        workspaceTitle={workspace!.title}
-      />
+      {workspace && (
+        <WorkspaceEditModal
+          workspaceId={workspaceId}
+          workspaceTitle={workspace!.title}
+        />
+      )}
       <MemberAddModal workspaceId={workspaceId} />
     </DrawerMenu>
   );
