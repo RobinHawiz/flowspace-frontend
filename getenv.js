@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const requiredEnvVars = ["VITE_API_BASE_URL"];
+const requiredEnvVars = ["VITE_API_BASE_URL", "VITE_SOCKET_SERVER_URL"];
 const missingVars = requiredEnvVars.filter((varName) => !process.env[varName]);
 if (missingVars.length > 0) {
   console.error("The following environment variables are missing:");
