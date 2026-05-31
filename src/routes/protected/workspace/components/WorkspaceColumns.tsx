@@ -177,14 +177,17 @@ function WorkspaceColumns({
                       taskOrder: prevTaskOrder,
                       workspaceColumnId: prevWorkspaceColumnId,
                     } = source.data as TaskResponse;
-                    const newTaskOrder = target.index;
+                    const newWorkspaceColumnId = String(target.group);
+                    const newTaskOrder = renderedBoardState[
+                      newWorkspaceColumnId
+                    ].findIndex((t) => t.id === taskId);
                     try {
                       await moveTaskToDifferentColumn({
                         workspaceId,
                         taskId,
                         prevTaskOrder,
                         prevWorkspaceColumnId,
-                        newWorkspaceColumnId: String(target.group),
+                        newWorkspaceColumnId,
                         newTaskOrder,
                       });
                     } catch (err) {
