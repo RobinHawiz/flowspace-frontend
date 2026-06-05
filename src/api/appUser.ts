@@ -4,6 +4,7 @@ import {
   type AppUserCredentials,
   type AppUserRegistration,
 } from "@customTypes/appUser";
+import { trackClientRequestId } from "@utils/clientRequestTracker";
 import delay from "@utils/delay";
 
 export async function registerUser(appUser: AppUserRegistration) {
@@ -44,8 +45,14 @@ export async function getUser() {
 }
 
 export async function logoutUser() {
+  const clientRequestId = crypto.randomUUID();
+  trackClientRequestId(clientRequestId);
+
   const options = {
     method: "POST" as const,
+    headers: {
+      "X-Client-Request-Id": clientRequestId,
+    },
     credentials: "include" as const,
   };
   await request(`/auth/logout`, options);

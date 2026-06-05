@@ -53,7 +53,7 @@ function createSocketConnection() {
 export function SocketProvider({ children }: PropsWithChildren) {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
-  const { isLoggedIn, isCheckingToken } = useAuth();
+  const { isLoggedIn, isCheckingToken, logout } = useAuth();
 
   useEffect(() => {
     if (!isLoggedIn || isCheckingToken) {
@@ -74,6 +74,12 @@ export function SocketProvider({ children }: PropsWithChildren) {
     function handleConnectionError(error: unknown) {
       console.error("Socket connection error", error);
       setIsConnected(false);
+    }
+
+    async function handleAppUserLogOut(clientRequestId: string) {
+      if (!consumeClientRequestId(clientRequestId)) {
+        await logout();
+      }
     }
 
     function handleWorkspaceCreated(
@@ -135,6 +141,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
     newSocket.on("connect", handleConnection);
     newSocket.on("disconnect", handleDisconnection);
     newSocket.on("connect_error", handleConnectionError);
+    newSocket.on("appUser:logOut", handleAppUserLogOut);
     newSocket.on("workspace:created", handleWorkspaceCreated);
     newSocket.on("workspace:updated", handleWorkspaceUpdated);
     newSocket.on("workspace:deleted", handleWorkspaceDeleted);
@@ -152,6 +159,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
       newSocket.off("connect", handleConnection);
       newSocket.off("disconnect", handleDisconnection);
       newSocket.off("connect_error", handleConnectionError);
+      newSocket.off("appUser:logOut", handleAppUserLogOut);
       newSocket.off("workspace:created", handleWorkspaceCreated);
       newSocket.off("workspace:updated", handleWorkspaceUpdated);
       newSocket.off("workspace:deleted", handleWorkspaceDeleted);
@@ -171,7 +179,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
       setSocket(null);
       setIsConnected(false);
     };
-  }, [isLoggedIn, isCheckingToken]);
+  }, [isLoggedIn, isCheckingToken, logout]);
 
   return (
     <SocketContext.Provider value={{ socket, isConnected }}>
